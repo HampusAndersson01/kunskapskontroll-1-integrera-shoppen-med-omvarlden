@@ -16,6 +16,12 @@ Projektet kommer att använda DummyJSON Products API som källa för demoprodukt
 
 Detta gör att produkterna kan sparas, redigeras av administratör och användas i orderflödet enligt uppgiftens krav.
 
+## Sitemap
+
+Sitemapen för e-handelsplattformen finns dokumenterad här:
+
+[docs/planning/sitemap.md](docs/planning/sitemap.md)
+
 ## Mockups
 
 UI-mockups för e-handelsplattformens planerade sidor finns skapade i Google Stitch:
