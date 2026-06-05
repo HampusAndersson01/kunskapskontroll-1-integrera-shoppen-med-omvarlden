@@ -21,3 +21,9 @@ Detta gör att produkterna kan sparas, redigeras av administratör och användas
 Sitemapen för e-handelsplattformen finns dokumenterad här:
 
 [docs/planning/sitemap.md](docs/planning/sitemap.md)
+
+## Mockups
+
+UI-mockups för e-handelsplattformens planerade sidor finns skapade i Google Stitch:
+
+[Öppna mockups i Google Stitch](https://stitch.withgoogle.com/projects/2797369421238320316)
