@@ -15,3 +15,9 @@ Källfilen för diagrammet finns här:
 Projektet kommer att använda DummyJSON Products API som källa för demoprodukter. Produkterna ska inte hämtas live direkt från DummyJSON i frontend. I stället ska de importeras till den egna databasen och därefter hanteras via applikationens egna API.
 
 Detta gör att produkterna kan sparas, redigeras av administratör och användas i orderflödet enligt uppgiftens krav.
+
+## Mockups
+
+UI-mockups för e-handelsplattformens planerade sidor finns skapade i Google Stitch:
+
+[Öppna mockups i Google Stitch](https://stitch.withgoogle.com/projects/2797369421238320316)
