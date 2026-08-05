@@ -18,9 +18,11 @@ Detta gör att produkterna kan sparas, redigeras av administratör och användas
 
 ## Konto- och autentiseringsbeslut
 
-Applikationen använder kundkonton för att koppla databaslagrade varukorgar och ordrar till respektive användare. Supabase Auth används för autentisering med e-post och lösenord. Användare har rollen `customer` eller `admin`.
+Kunder behöver inte logga in för att se produkter eller genomföra ett köp. Applikationen stödjer gästköp där kundens namn och e-post sparas på ordern.
 
-Vanliga registreringar får alltid rollen `customer`. Administratörskonton skapas manuellt i Supabase och får rollen `admin` i profilen. Användaren ska aldrig kunna välja rollen `admin` i registreringsformuläret.
+Kundkonton kan användas för att koppla databaslagrade varukorgar och ordrar till respektive användare. Supabase Auth används för autentisering med e-post och lösenord. Inloggade användare har rollen `customer` eller `admin`.
+
+Vanliga registreringar får alltid rollen `customer`. Administratörskonton skapas manuellt i Supabase och får rollen `admin` i profilen. Användaren ska aldrig kunna välja rollen `admin` i registreringsformuläret. Adminområdet kräver inloggning med rollen `admin`.
 
 ## Sitemap
 

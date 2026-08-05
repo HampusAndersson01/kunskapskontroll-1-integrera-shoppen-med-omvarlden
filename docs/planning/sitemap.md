@@ -6,10 +6,10 @@ Denna sitemap beskriver vilka sidor som ska finnas i e-handelsplattformen och hu
 
 Applikationen delas upp i två huvuddelar:
 
-1. En kunddel där inloggade kunder kan se produkter, lägga produkter i en databaslagrad varukorg och skapa en order.
+1. En kunddel där besökare kan se produkter, lägga produkter i en databaslagrad varukorg och skapa en order utan att logga in.
 2. En admin-del där administratörer kan hantera produkter, se ordrar och uppdatera orderstatus.
 
-Samma inloggningssida används för både kunder och administratörer. Kunder skickas tillbaka till butiken efter inloggning, medan administratörer får tillgång till adminområdet.
+Samma inloggningssida används för både kunder och administratörer. Kundkonton är frivilliga och kan användas för att koppla varukorgar och ordrar till en användare. Kunder skickas tillbaka till butiken efter inloggning, medan administratörer får tillgång till adminområdet.
 
 ## Sitemap i trädstruktur
 
@@ -42,6 +42,7 @@ Funktioner:
 * Filtrera produkter efter kategori
 * Lägga produkt i varukorgen
 * Gå vidare till produktdetalj
+* Fungera utan inloggning
 
 ### `/products/:id`
 
@@ -56,6 +57,7 @@ Funktioner:
 * Visa kategori
 * Visa lagerstatus
 * Lägga produkt i varukorgen
+* Fungera utan inloggning
 
 ### `/cart`
 
@@ -69,7 +71,7 @@ Funktioner:
 * Ta bort produkt
 * Visa totalsumma
 * Gå vidare till checkout
-* Spara varukorgen i databasen kopplad till användaren
+* Spara varukorgen i databasen för både gäster och inloggade kunder
 
 ### `/checkout`
 
@@ -78,7 +80,8 @@ Checkout och simulerad betalning.
 Funktioner:
 
 * Visa ordersammanfattning
-* Använda kundens konto för att koppla ordern till rätt användare
+* Låta gäster fylla i namn och e-post
+* Koppla ordern till kundkontot om kunden är inloggad
 * Genomföra en simulerad betalning
 * Skapa order i databasen
 
@@ -115,6 +118,7 @@ Funktioner:
 * Skapa kundkonto med e-post och lösenord via Supabase Auth
 * Skapa tillhörande profil med rollen `customer`
 * Aldrig låta användaren välja rollen `admin`
+* Vara frivillig eftersom köp även kan göras som gäst
 
 ## Adminsidor
 
@@ -219,10 +223,10 @@ Login
 Sitemapen stödjer uppgiftens krav genom att inkludera:
 
 * Produktlista för kunder
-* Databaslagrad varukorg
+* Databaslagrad varukorg för gäster och inloggade kunder
 * Checkout där order skapas
 * Adminvy för att lägga till och redigera produkter
 * Adminvy för att se ordrar och beställda produkter
 * Login och skyddade adminflöden för VG
-* Registrering av kundkonton
+* Frivillig registrering av kundkonton
 * Orderstatus för VG
