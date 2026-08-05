@@ -1,5 +1,71 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/r1QxwNOh)
 
+# Min egna e-handel
+
+Detta projekt är en e-handelsplattform för skoluppgiften i systemutveckling. Appen använder React i frontend och Supabase för auth, databas och behörighet.
+
+## Kom igång lokalt
+
+Projektet har en frontend i `frontend/`.
+
+Krav:
+
+```powershell
+node --version
+npm --version
+```
+
+Installera beroenden:
+
+```powershell
+npm install
+```
+
+Skapa lokal miljöfil vid behov:
+
+```powershell
+Copy-Item frontend\.env.example frontend\.env.local
+```
+
+Fyll i Supabase-värden i `frontend/.env.local`:
+
+```env
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
+```
+
+Starta frontend:
+
+```powershell
+npm run dev
+```
+
+Standardadress:
+
+```txt
+Frontend: http://localhost:5173
+```
+
+Kontrollera TypeScript och bygg projektet:
+
+```powershell
+npm run typecheck
+npm run build
+```
+
+## Supabase
+
+Supabase används för:
+
+- login med Supabase Auth
+- produkter, kategorier, varukorgar och ordrar
+- adminbehörighet via `profiles.role`
+- RLS och databasregler
+
+Vanliga kundkonton ska ha rollen `customer`. Administratörskonton skapas manuellt i Supabase och får rollen `admin` i profilen. Användaren ska aldrig kunna välja rollen `admin` i registreringsformuläret.
+
+Mappen `supabase/` innehåller schemafiler för att dokumentera databasstrukturen i repot. Databasen finns redan i Supabase, så baseline-migrationen är främst för versionshistorik och granskning.
+
 ## Databasdiagram
 
 Diagrammet innehåller tabeller för produkter, kategorier, användare, varukorg, order och orderrader.
@@ -10,19 +76,11 @@ Källfilen för diagrammet finns här:
 
 `docs/diagrams/database-er-diagram.eraser.md`
 
-## Produktdata och API-beslut
+## Produktdata
 
-Projektet kommer att använda DummyJSON Products API som källa för demoprodukter. Produkterna ska inte hämtas live direkt från DummyJSON i frontend. I stället ska de importeras till den egna databasen och därefter hanteras via applikationens egna API.
+Projektet kommer att använda DummyJSON Products API som källa för demoprodukter. Produkterna ska inte hämtas live direkt från DummyJSON i frontend. I stället ska de importeras till Supabase och därefter läsas från projektets egen databas.
 
 Detta gör att produkterna kan sparas, redigeras av administratör och användas i orderflödet enligt uppgiftens krav.
-
-## Konto- och autentiseringsbeslut
-
-Kunder behöver inte logga in för att se produkter eller genomföra ett köp. Applikationen stödjer gästköp där kundens namn och e-post sparas på ordern.
-
-Kundkonton kan användas för att koppla databaslagrade varukorgar och ordrar till respektive användare. Supabase Auth används för autentisering med e-post och lösenord. Inloggade användare har rollen `customer` eller `admin`.
-
-Vanliga registreringar får alltid rollen `customer`. Administratörskonton skapas manuellt i Supabase och får rollen `admin` i profilen. Användaren ska aldrig kunna välja rollen `admin` i registreringsformuläret. Adminområdet kräver inloggning med rollen `admin`.
 
 ## Sitemap
 

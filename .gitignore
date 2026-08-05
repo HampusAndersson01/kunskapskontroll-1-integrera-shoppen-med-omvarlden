@@ -1,1 +1,10 @@
 AGENTS.md
+node_modules/
+dist/
+*.tsbuildinfo
+frontend/.vite/
+supabase/.temp/
+.env
+.env.local
+.DS_Store
+npm-debug.log*

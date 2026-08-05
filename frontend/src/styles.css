@@ -1,0 +1,99 @@
+:root {
+  color: #222;
+  background: #fff;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  color: #0645ad;
+}
+
+.site-header {
+  border-bottom: 1px solid #ccc;
+  padding: 16px 20px;
+}
+
+.site-title {
+  display: inline-block;
+  margin-bottom: 12px;
+  color: #111;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.main-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.page {
+  max-width: 900px;
+  padding: 24px 20px;
+}
+
+.placeholder h1 {
+  margin: 0 0 12px;
+  font-size: 2rem;
+}
+
+.placeholder p {
+  max-width: 680px;
+  line-height: 1.5;
+}
+
+.link-list {
+  margin-top: 20px;
+  padding-left: 20px;
+}
+
+.link-list li {
+  margin-bottom: 8px;
+}
+
+.form-block {
+  display: grid;
+  gap: 12px;
+  max-width: 360px;
+  margin: 20px 0;
+}
+
+.form-block label {
+  display: grid;
+  gap: 4px;
+}
+
+.form-block input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #999;
+  font: inherit;
+}
+
+.form-block button {
+  width: fit-content;
+  padding: 8px 12px;
+  border: 1px solid #444;
+  background: #eee;
+  color: #111;
+  font: inherit;
+  cursor: pointer;
+}
+
+.form-block button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.form-message {
+  font-weight: 700;
+}
