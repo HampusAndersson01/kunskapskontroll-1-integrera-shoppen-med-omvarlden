@@ -16,6 +16,14 @@ Projektet kommer att använda DummyJSON Products API som källa för demoprodukt
 
 Detta gör att produkterna kan sparas, redigeras av administratör och användas i orderflödet enligt uppgiftens krav.
 
+## Konto- och autentiseringsbeslut
+
+Kunder behöver inte logga in för att se produkter eller genomföra ett köp. Applikationen stödjer gästköp där kundens namn och e-post sparas på ordern.
+
+Kundkonton kan användas för att koppla databaslagrade varukorgar och ordrar till respektive användare. Supabase Auth används för autentisering med e-post och lösenord. Inloggade användare har rollen `customer` eller `admin`.
+
+Vanliga registreringar får alltid rollen `customer`. Administratörskonton skapas manuellt i Supabase och får rollen `admin` i profilen. Användaren ska aldrig kunna välja rollen `admin` i registreringsformuläret. Adminområdet kräver inloggning med rollen `admin`.
+
 ## Sitemap
 
 Sitemapen för e-handelsplattformen finns dokumenterad här:
