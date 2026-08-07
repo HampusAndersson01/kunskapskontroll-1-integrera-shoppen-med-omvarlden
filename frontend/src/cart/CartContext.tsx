@@ -52,7 +52,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
           if (existingItem) {
             return currentItems.map((item) =>
               item.productId === product.id
-                ? { ...item, quantity: Math.min(item.quantity + 1, item.stock) }
+                ? {
+                    ...item,
+                    name: product.name,
+                    price: product.price,
+                    imageUrl: product.imageUrl,
+                    stock: product.stock,
+                    quantity: Math.min(item.quantity + 1, product.stock),
+                  }
                 : item,
             );
           }
