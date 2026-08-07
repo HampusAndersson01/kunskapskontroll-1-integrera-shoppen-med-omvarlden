@@ -17,10 +17,68 @@ export type CreatedOrder = {
   totalPrice: number;
 };
 
+export type OrderStatus = "pending" | "processing" | "delivered" | "refunded";
+
+export type AdminOrderListItem = {
+  id: string;
+  customerName: string;
+  customerEmail: string;
+  totalPrice: number;
+  status: OrderStatus;
+  createdAt: string;
+};
+
+export type AdminOrderItem = {
+  id: string;
+  productId: string | null;
+  productName: string;
+  quantity: number;
+  priceAtPurchase: number;
+};
+
+export type AdminOrderDetails = AdminOrderListItem & {
+  customerPhone: string | null;
+  shippingAddress: string | null;
+  shippingPostalCode: string | null;
+  shippingCity: string | null;
+  shippingCountry: string | null;
+  updatedAt: string;
+  items: AdminOrderItem[];
+};
+
 type OrderRow = {
   id: string;
   total_price: number | string;
 };
+
+type AdminOrderRow = OrderRow & {
+  customer_name: string;
+  customer_email: string;
+  customer_phone: string | null;
+  shipping_address: string | null;
+  shipping_postal_code: string | null;
+  shipping_city: string | null;
+  shipping_country: string | null;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  order_items?: AdminOrderItemRow[] | null;
+};
+
+type AdminOrderItemRow = {
+  id: string;
+  product_id: string | null;
+  product_name: string;
+  quantity: number;
+  price_at_purchase: number | string;
+};
+
+export const orderStatusOptions: Array<{ value: OrderStatus; label: string }> = [
+  { value: "pending", label: "Beställd" },
+  { value: "processing", label: "Behandlas" },
+  { value: "delivered", label: "Levererad" },
+  { value: "refunded", label: "Återbetald" },
+];
 
 export async function createOrder(input: CheckoutInput): Promise<CreatedOrder> {
   if (input.items.length === 0) {
@@ -70,4 +128,102 @@ export async function getOrderSummary(orderId: string): Promise<CreatedOrder | n
         totalPrice: Number(data.total_price),
       }
     : null;
+}
+
+export async function getAdminOrders(): Promise<AdminOrderListItem[]> {
+  const { data, error } = await supabase
+    .from("orders")
+    .select("id, customer_name, customer_email, total_price, status, created_at, updated_at")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw error;
+  }
+
+  return ((data ?? []) as AdminOrderRow[]).map(mapAdminOrderListItem);
+}
+
+export async function getAdminOrderById(orderId: string): Promise<AdminOrderDetails | null> {
+  const { data, error } = await supabase
+    .from("orders")
+    .select(
+      `
+        id,
+        customer_name,
+        customer_email,
+        customer_phone,
+        shipping_address,
+        shipping_postal_code,
+        shipping_city,
+        shipping_country,
+        total_price,
+        status,
+        created_at,
+        updated_at,
+        order_items (
+          id,
+          product_id,
+          product_name,
+          quantity,
+          price_at_purchase
+        )
+      `,
+    )
+    .eq("id", orderId)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return data ? mapAdminOrderDetails(data as AdminOrderRow) : null;
+}
+
+export async function updateAdminOrderStatus(orderId: string, status: OrderStatus): Promise<void> {
+  const { error } = await supabase
+    .from("orders")
+    .update({ status, updated_at: new Date().toISOString() })
+    .eq("id", orderId);
+
+  if (error) {
+    throw error;
+  }
+}
+
+export function getOrderStatusLabel(status: string) {
+  return orderStatusOptions.find((option) => option.value === status)?.label ?? status;
+}
+
+function mapAdminOrderListItem(row: AdminOrderRow): AdminOrderListItem {
+  return {
+    id: row.id,
+    customerName: row.customer_name,
+    customerEmail: row.customer_email,
+    totalPrice: Number(row.total_price),
+    status: normalizeOrderStatus(row.status),
+    createdAt: row.created_at,
+  };
+}
+
+function mapAdminOrderDetails(row: AdminOrderRow): AdminOrderDetails {
+  return {
+    ...mapAdminOrderListItem(row),
+    customerPhone: row.customer_phone,
+    shippingAddress: row.shipping_address,
+    shippingPostalCode: row.shipping_postal_code,
+    shippingCity: row.shipping_city,
+    shippingCountry: row.shipping_country,
+    updatedAt: row.updated_at,
+    items: (row.order_items ?? []).map((item) => ({
+      id: item.id,
+      productId: item.product_id,
+      productName: item.product_name,
+      quantity: item.quantity,
+      priceAtPurchase: Number(item.price_at_purchase),
+    })),
+  };
+}
+
+function normalizeOrderStatus(status: string): OrderStatus {
+  return orderStatusOptions.some((option) => option.value === status) ? (status as OrderStatus) : "pending";
 }

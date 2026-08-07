@@ -323,6 +323,108 @@ a {
   font-weight: 700;
 }
 
+.admin-page h1 {
+  margin: 0 0 8px;
+}
+
+.admin-page h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+.admin-page section {
+  margin-top: 28px;
+}
+
+.table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+  vertical-align: top;
+}
+
+.data-table th {
+  background: #f4f4f4;
+}
+
+.data-table tfoot th,
+.data-table tfoot td {
+  border-top: 2px solid #222;
+  font-weight: 700;
+}
+
+.admin-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(240px, 1fr));
+  gap: 28px;
+}
+
+.admin-facts {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.admin-facts div {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 12px;
+}
+
+.admin-facts dt {
+  font-weight: 700;
+}
+
+.admin-facts dd {
+  margin: 0;
+}
+
+.status-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: end;
+  margin-top: 28px;
+}
+
+.status-form label {
+  display: grid;
+  gap: 4px;
+}
+
+.status-form select {
+  min-width: 180px;
+  padding: 8px;
+  border: 1px solid #999;
+  background: #fff;
+  font: inherit;
+}
+
+.status-form button {
+  padding: 8px 12px;
+  border: 1px solid #444;
+  background: #eee;
+  color: #111;
+  font: inherit;
+  cursor: pointer;
+}
+
+.status-form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 @media (max-width: 700px) {
   .cart-item {
     grid-template-columns: 64px 1fr;
@@ -334,6 +436,10 @@ a {
   }
 
   .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-detail-grid {
     grid-template-columns: 1fr;
   }
 }
