@@ -97,3 +97,98 @@ a {
 .form-message {
   font-weight: 700;
 }
+
+.page-heading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: end;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.filter-field {
+  display: grid;
+  gap: 4px;
+  min-width: 220px;
+}
+
+.filter-field select {
+  padding: 8px;
+  border: 1px solid #999;
+  background: #fff;
+  font: inherit;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.product-card {
+  border: 1px solid #ccc;
+  padding: 12px;
+}
+
+.product-card img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+  background: #f4f4f4;
+}
+
+.product-card h2 {
+  margin: 12px 0 8px;
+  font-size: 1rem;
+}
+
+.product-card p {
+  margin: 0 0 6px;
+}
+
+.product-details {
+  display: grid;
+  gap: 24px;
+  max-width: 900px;
+}
+
+.product-details img {
+  width: min(100%, 420px);
+  border: 1px solid #ccc;
+  background: #f4f4f4;
+}
+
+.product-details button {
+  padding: 8px 12px;
+  border: 1px solid #444;
+  background: #eee;
+  color: #111;
+  font: inherit;
+  cursor: pointer;
+}
+
+.product-details button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.product-facts {
+  display: grid;
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.product-facts div {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 12px;
+}
+
+.product-facts dt {
+  font-weight: 700;
+}
+
+.product-facts dd {
+  margin: 0;
+}
