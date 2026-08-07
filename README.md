@@ -82,6 +82,10 @@ Projektet kommer att använda DummyJSON Products API som källa för demoprodukt
 
 Detta gör att produkterna kan sparas, redigeras av administratör och användas i orderflödet enligt uppgiftens krav.
 
+Importscriptet dokumenteras här:
+
+[docs/data-import.md](docs/data-import.md)
+
 ## Sitemap
 
 Sitemapen för e-handelsplattformen finns dokumenterad här:
