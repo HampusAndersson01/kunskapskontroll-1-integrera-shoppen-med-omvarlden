@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
+import { useCart } from "../../cart/CartContext";
 import { Link } from "../../components/Link";
 import { isSupabaseConfigured } from "../../lib/supabase";
+import type { PageProps } from "../../routes/routes";
 import { getActiveProductById, type Product } from "../../services/productService";
 import { formatPrice } from "../../utils/format";
-import type { PageProps } from "../../routes/routes";
 
 type LoadState = "loading" | "ready" | "error" | "not-found";
 
@@ -12,6 +13,7 @@ export function ProductDetailsPage({ path }: PageProps) {
   const [product, setProduct] = useState<Product | null>(null);
   const [loadState, setLoadState] = useState<LoadState>("loading");
   const [message, setMessage] = useState("");
+  const { addProduct } = useCart();
 
   useEffect(() => {
     let active = true;
@@ -119,7 +121,10 @@ export function ProductDetailsPage({ path }: PageProps) {
         <button
           type="button"
           disabled={product.stock <= 0}
-          onClick={() => setMessage("Varukorgen byggs i nästa steg.")}
+          onClick={() => {
+            addProduct(product);
+            setMessage("Produkten lades i varukorgen.");
+          }}
         >
           Lägg i varukorg
         </button>
