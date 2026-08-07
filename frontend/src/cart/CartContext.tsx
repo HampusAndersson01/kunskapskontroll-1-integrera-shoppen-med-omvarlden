@@ -145,6 +145,7 @@ function isCartItem(value: unknown): value is CartItem {
     typeof item.productId === "string" &&
     typeof item.name === "string" &&
     typeof item.price === "number" &&
+    (item.imageUrl === null || typeof item.imageUrl === "string") &&
     typeof item.stock === "number" &&
     typeof item.quantity === "number" &&
     item.quantity > 0
