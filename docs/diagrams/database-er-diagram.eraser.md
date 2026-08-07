@@ -61,6 +61,11 @@ orders [icon: file-text, color: green] {
   user_id uuid fk
   customer_name string
   customer_email string
+  customer_phone string
+  shipping_address string
+  shipping_postal_code string
+  shipping_city string
+  shipping_country string
   total_price decimal(10,2)
   status string
   created_at timestamptz
