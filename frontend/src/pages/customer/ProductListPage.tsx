@@ -6,10 +6,19 @@ import { getActiveProducts, getCategories, type Category, type Product } from ".
 
 type LoadState = "loading" | "ready" | "error";
 
+function readProductSearch() {
+  return new URLSearchParams(window.location.search).get("search")?.trim() ?? "";
+}
+
+function normalizeSearchText(value: string | null) {
+  return (value ?? "").toLocaleLowerCase("sv-SE");
+}
+
 export function ProductListPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [searchQuery, setSearchQuery] = useState(readProductSearch);
   const [loadState, setLoadState] = useState<LoadState>("loading");
 
   useEffect(() => {
@@ -45,13 +54,46 @@ export function ProductListPage() {
     };
   }, []);
 
-  const visibleProducts = useMemo(() => {
-    if (!selectedCategory) {
-      return products;
+  useEffect(() => {
+    function handleNavigation() {
+      setSearchQuery(readProductSearch());
     }
 
-    return products.filter((product) => product.categorySlug === selectedCategory);
-  }, [products, selectedCategory]);
+    window.addEventListener("popstate", handleNavigation);
+
+    return () => {
+      window.removeEventListener("popstate", handleNavigation);
+    };
+  }, []);
+
+  const visibleProducts = useMemo(() => {
+    const normalizedQuery = normalizeSearchText(searchQuery);
+
+    return products.filter((product) => {
+      const matchesCategory = !selectedCategory || product.categorySlug === selectedCategory;
+
+      if (!matchesCategory) {
+        return false;
+      }
+
+      if (!normalizedQuery) {
+        return true;
+      }
+
+      const searchableText = [product.name, product.brand, product.categoryName]
+        .map(normalizeSearchText)
+        .join(" ");
+
+      return searchableText.includes(normalizedQuery);
+    });
+  }, [products, searchQuery, selectedCategory]);
+
+  const emptyMessage = searchQuery ? `Inga produkter matchar "${searchQuery}".` : "Inga produkter hittades.";
+
+  function clearSearch() {
+    window.history.pushState({}, "", "/");
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  }
 
   if (loadState === "loading") {
     return (
@@ -74,12 +116,22 @@ export function ProductListPage() {
   return (
     <section>
       <div className="page-heading">
-        <h1>Produkter</h1>
+        <div>
+          <h1>Produkter</h1>
+          {searchQuery ? (
+            <p className="search-summary">
+              <span>Visar resultat för "{searchQuery}".</span>
+              <button type="button" onClick={clearSearch}>
+                Rensa sökning
+              </button>
+            </p>
+          ) : null}
+        </div>
         <CategoryFilter categories={categories} selectedSlug={selectedCategory} onChange={setSelectedCategory} />
       </div>
 
       {visibleProducts.length === 0 ? (
-        <p>Inga produkter hittades.</p>
+        <p>{emptyMessage}</p>
       ) : (
         <div className="product-grid">
           {visibleProducts.map((product) => (
