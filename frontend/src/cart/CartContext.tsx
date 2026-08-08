@@ -1,5 +1,7 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
+import { useAuth } from "../auth/AuthContext";
+import { getCartItems, getOrCreateCart, replaceCartItems } from "../services/cartService";
 import type { Product } from "../services/productService";
 
 const CART_STORAGE_KEY = "min-egna-ehandel-cart";
@@ -17,6 +19,7 @@ type CartContextValue = {
   items: CartItem[];
   itemCount: number;
   totalPrice: number;
+  isSyncing: boolean;
   addProduct: (product: Product) => void;
   increaseQuantity: (productId: string) => void;
   decreaseQuantity: (productId: string) => void;
@@ -27,11 +30,99 @@ type CartContextValue = {
 const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
+  const { status, user } = useAuth();
   const [items, setItems] = useState<CartItem[]>(() => readStoredCart());
+  const [cartId, setCartId] = useState<string | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const hasLoadedDatabaseCart = useRef(false);
 
   useEffect(() => {
+    if (status !== "ready") {
+      return;
+    }
+
+    if (user) {
+      return;
+    }
+
     window.localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
-  }, [items]);
+  }, [items, status, user]);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadDatabaseCart() {
+      if (status !== "ready") {
+        return;
+      }
+
+      if (!user) {
+        setCartId(null);
+        hasLoadedDatabaseCart.current = false;
+        setItems(readStoredCart());
+        return;
+      }
+
+      setIsSyncing(true);
+
+      try {
+        const nextCartId = await getOrCreateCart(user.id);
+        const databaseItems = await getCartItems(nextCartId);
+        const localItems = readStoredCart();
+        const mergedItems = mergeCartItems(databaseItems, localItems);
+
+        if (!active) {
+          return;
+        }
+
+        setCartId(nextCartId);
+        setItems(mergedItems);
+        hasLoadedDatabaseCart.current = true;
+
+        if (localItems.length > 0) {
+          await replaceCartItems(nextCartId, mergedItems);
+          window.localStorage.removeItem(CART_STORAGE_KEY);
+        }
+      } finally {
+        if (active) {
+          setIsSyncing(false);
+        }
+      }
+    }
+
+    void loadDatabaseCart();
+
+    return () => {
+      active = false;
+    };
+  }, [status, user]);
+
+  useEffect(() => {
+    if (!user || !cartId || !hasLoadedDatabaseCart.current) {
+      return;
+    }
+
+    let active = true;
+    const activeCartId = cartId;
+
+    async function saveDatabaseCart() {
+      setIsSyncing(true);
+
+      try {
+        await replaceCartItems(activeCartId, items);
+      } finally {
+        if (active) {
+          setIsSyncing(false);
+        }
+      }
+    }
+
+    void saveDatabaseCart();
+
+    return () => {
+      active = false;
+    };
+  }, [cartId, items, user]);
 
   const value = useMemo<CartContextValue>(() => {
     const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);
@@ -41,6 +132,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       items,
       itemCount,
       totalPrice,
+      isSyncing,
       addProduct(product) {
         if (product.stock <= 0) {
           return;
@@ -106,7 +198,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         setItems([]);
       },
     };
-  }, [items]);
+  }, [isSyncing, items]);
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 }
@@ -157,4 +249,31 @@ function isCartItem(value: unknown): value is CartItem {
     typeof item.quantity === "number" &&
     item.quantity > 0
   );
+}
+
+function mergeCartItems(databaseItems: CartItem[], localItems: CartItem[]) {
+  const itemsByProductId = new Map<string, CartItem>();
+
+  for (const item of [...databaseItems, ...localItems]) {
+    const existingItem = itemsByProductId.get(item.productId);
+
+    if (!existingItem) {
+      itemsByProductId.set(item.productId, {
+        ...item,
+        quantity: Math.min(item.quantity, item.stock),
+      });
+      continue;
+    }
+
+    itemsByProductId.set(item.productId, {
+      ...existingItem,
+      name: item.name,
+      price: item.price,
+      imageUrl: item.imageUrl,
+      stock: item.stock,
+      quantity: Math.min(existingItem.quantity + item.quantity, item.stock),
+    });
+  }
+
+  return [...itemsByProductId.values()].filter((item) => item.quantity > 0);
 }
