@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { Search, ShoppingCart } from "lucide-react";
+import { LogIn, LogOut, Search, ShoppingCart } from "lucide-react";
+import { useAuth } from "../../auth/AuthContext";
 import { useCart } from "../../cart/CartContext";
 import { Link } from "../../components/Link";
 import { useCurrentPath } from "../../routes/useCurrentPath";
@@ -10,6 +11,7 @@ function readProductSearch() {
 
 export function CustomerHeader() {
   const { itemCount } = useCart();
+  const { isAdmin, signOut, user } = useAuth();
   const currentPath = useCurrentPath();
   const [productSearch, setProductSearch] = useState(readProductSearch);
 
@@ -46,12 +48,6 @@ export function CustomerHeader() {
           <Link href="/" className={currentPath === "/" ? "active" : undefined}>
             Produkter
           </Link>
-          <Link href="/login" className={currentPath === "/login" ? "active" : undefined}>
-            Logga in
-          </Link>
-          <Link href="/admin" className={currentPath.startsWith("/admin") ? "active" : undefined}>
-            Admin
-          </Link>
         </nav>
 
         <form className="header-search" role="search" onSubmit={handleSearchSubmit}>
@@ -71,14 +67,34 @@ export function CustomerHeader() {
           </div>
         </form>
 
-        <Link
-          href="/cart"
-          className={currentPath === "/cart" ? "cart-icon-link active" : "cart-icon-link"}
-          aria-label={`Varukorg med ${itemCount} produkter`}
-        >
-          <ShoppingCart size={30} strokeWidth={2.4} aria-hidden="true" />
-          {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
-        </Link>
+        <div className="header-actions">
+          {user ? (
+            <button type="button" className="header-auth-button" onClick={() => void signOut()}>
+              <LogOut size={18} strokeWidth={2.4} aria-hidden="true" />
+              Logga ut
+            </button>
+          ) : (
+            <Link href="/login" className={currentPath === "/login" ? "header-auth-button active" : "header-auth-button"}>
+              <LogIn size={18} strokeWidth={2.4} aria-hidden="true" />
+              Logga in
+            </Link>
+          )}
+
+          {isAdmin && (
+            <Link href="/admin" className={currentPath.startsWith("/admin") ? "header-auth-button active" : "header-auth-button"}>
+              Admin
+            </Link>
+          )}
+
+          <Link
+            href="/cart"
+            className={currentPath === "/cart" ? "cart-icon-link active" : "cart-icon-link"}
+            aria-label={`Varukorg med ${itemCount} produkter`}
+          >
+            <ShoppingCart size={30} strokeWidth={2.4} aria-hidden="true" />
+            {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
+          </Link>
+        </div>
       </div>
     </header>
   );
