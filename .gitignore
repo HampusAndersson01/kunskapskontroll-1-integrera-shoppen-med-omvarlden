@@ -10,5 +10,7 @@ supabase/.temp/
 npm-debug.log*
 .tmp-dev-server.err.log
 .tmp-dev-server.out.log
+.tmp-dev-server-frontend.err.log
+.tmp-dev-server-frontend.out.log
 .stitch/
 frontend/.stitch/
