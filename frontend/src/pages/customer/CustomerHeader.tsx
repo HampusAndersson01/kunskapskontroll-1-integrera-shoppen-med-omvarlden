@@ -1,5 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
-import { LogIn, LogOut, Search, ShoppingCart } from "lucide-react";
+import { LogIn, LogOut, ShieldCheck, Search, ShoppingCart } from "lucide-react";
 import { useAuth } from "../../auth/AuthContext";
 import { useCart } from "../../cart/CartContext";
 import { Link } from "../../components/Link";
@@ -7,6 +7,21 @@ import { useCurrentPath } from "../../routes/useCurrentPath";
 
 function readProductSearch() {
   return new URLSearchParams(window.location.search).get("search") ?? "";
+}
+
+function getInitials(email: string | undefined) {
+  if (!email) {
+    return "G";
+  }
+
+  const [namePart] = email.split("@");
+  const parts = namePart.split(/[._-]/).filter(Boolean);
+
+  if (parts.length >= 2) {
+    return `${parts[0][0]}${parts[1][0]}`.toUpperCase();
+  }
+
+  return namePart.slice(0, 2).toUpperCase();
 }
 
 export function CustomerHeader() {
@@ -68,23 +83,39 @@ export function CustomerHeader() {
         </form>
 
         <div className="header-actions">
-          {user ? (
-            <button type="button" className="header-auth-button" onClick={() => void signOut()}>
-              <LogOut size={18} strokeWidth={2.4} aria-hidden="true" />
-              Logga ut
+          <div className="profile-menu">
+            <button type="button" className="profile-avatar" aria-label="Öppna profilmeny">
+              {getInitials(user?.email)}
             </button>
-          ) : (
-            <Link href="/login" className={currentPath === "/login" ? "header-auth-button active" : "header-auth-button"}>
-              <LogIn size={18} strokeWidth={2.4} aria-hidden="true" />
-              Logga in
-            </Link>
-          )}
+            <div className="profile-dropdown">
+              <div className="profile-summary">
+                <span className="profile-avatar small">{getInitials(user?.email)}</span>
+                <span>
+                  <strong>{user ? "Inloggad" : "Gäst"}</strong>
+                  <span>{user?.email ?? "Logga in för adminåtkomst"}</span>
+                </span>
+              </div>
 
-          {isAdmin && (
-            <Link href="/admin" className={currentPath.startsWith("/admin") ? "header-auth-button active" : "header-auth-button"}>
-              Admin
-            </Link>
-          )}
+              {user ? (
+                <button type="button" className="profile-menu-item" onClick={() => void signOut()}>
+                  <LogOut size={18} strokeWidth={2.4} aria-hidden="true" />
+                  Logga ut
+                </button>
+              ) : (
+                <Link href="/login" className="profile-menu-item">
+                  <LogIn size={18} strokeWidth={2.4} aria-hidden="true" />
+                  Logga in
+                </Link>
+              )}
+
+              {isAdmin && (
+                <Link href="/admin" className="profile-menu-item">
+                  <ShieldCheck size={18} strokeWidth={2.4} aria-hidden="true" />
+                  Admin
+                </Link>
+              )}
+            </div>
+          </div>
 
           <Link
             href="/cart"
