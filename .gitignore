@@ -8,3 +8,7 @@ supabase/.temp/
 .env.local
 .DS_Store
 npm-debug.log*
+.tmp-dev-server.err.log
+.tmp-dev-server.out.log
+.stitch/
+frontend/.stitch/
