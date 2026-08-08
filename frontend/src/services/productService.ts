@@ -21,6 +21,20 @@ export type Product = {
   brand: string | null;
   sku: string;
   imageUrl: string | null;
+  isActive: boolean;
+};
+
+export type ProductFormInput = {
+  categoryId: string | null;
+  name: string;
+  description: string;
+  price: number;
+  discountPercentage: number;
+  stock: number;
+  brand: string;
+  sku: string;
+  imageUrl: string;
+  isActive: boolean;
 };
 
 type CategoryRow = {
@@ -42,6 +56,7 @@ type ProductRow = {
   brand: string | null;
   sku: string;
   image_url: string | null;
+  is_active: boolean;
   categories: CategoryRow | CategoryRow[] | null;
 };
 
@@ -58,6 +73,7 @@ const productSelect = `
   brand,
   sku,
   image_url,
+  is_active,
   categories (
     id,
     name,
@@ -89,6 +105,16 @@ export async function getActiveProducts() {
   return ((data ?? []) as unknown as ProductRow[]).map(mapProduct);
 }
 
+export async function getAdminProducts() {
+  const { data, error } = await supabase.from("products").select(productSelect).order("name");
+
+  if (error) {
+    throw error;
+  }
+
+  return ((data ?? []) as unknown as ProductRow[]).map(mapProduct);
+}
+
 export async function getActiveProductById(id: string) {
   const { data, error } = await supabase
     .from("products")
@@ -102,6 +128,48 @@ export async function getActiveProductById(id: string) {
   }
 
   return data ? mapProduct(data as unknown as ProductRow) : null;
+}
+
+export async function getAdminProductById(id: string) {
+  const { data, error } = await supabase.from("products").select(productSelect).eq("id", id).maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  return data ? mapProduct(data as unknown as ProductRow) : null;
+}
+
+export async function createAdminProduct(input: ProductFormInput) {
+  const { data, error } = await supabase
+    .from("products")
+    .insert(mapProductFormInput(input))
+    .select(productSelect)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return mapProduct(data as unknown as ProductRow);
+}
+
+export async function updateAdminProduct(id: string, input: ProductFormInput) {
+  const { data, error } = await supabase
+    .from("products")
+    .update({
+      ...mapProductFormInput(input),
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", id)
+    .select(productSelect)
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return mapProduct(data as unknown as ProductRow);
 }
 
 function mapProduct(row: ProductRow): Product {
@@ -122,5 +190,21 @@ function mapProduct(row: ProductRow): Product {
     brand: row.brand,
     sku: row.sku,
     imageUrl: row.image_url,
+    isActive: row.is_active,
+  };
+}
+
+function mapProductFormInput(input: ProductFormInput) {
+  return {
+    category_id: input.categoryId,
+    name: input.name.trim(),
+    description: input.description.trim() || null,
+    price: input.price,
+    discount_percentage: input.discountPercentage,
+    stock: input.stock,
+    brand: input.brand.trim() || null,
+    sku: input.sku.trim(),
+    image_url: input.imageUrl.trim() || null,
+    is_active: input.isActive,
   };
 }
