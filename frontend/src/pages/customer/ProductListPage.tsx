@@ -6,6 +6,8 @@ import { getActiveProducts, getCategories, type Category, type Product } from ".
 
 type LoadState = "loading" | "ready" | "error";
 
+const PRODUCTS_PER_PAGE = 12;
+
 function readProductSearch() {
   return new URLSearchParams(window.location.search).get("search")?.trim() ?? "";
 }
@@ -20,6 +22,7 @@ export function ProductListPage() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchQuery, setSearchQuery] = useState(readProductSearch);
   const [loadState, setLoadState] = useState<LoadState>("loading");
+  const [visibleCount, setVisibleCount] = useState(PRODUCTS_PER_PAGE);
 
   useEffect(() => {
     let active = true;
@@ -66,6 +69,10 @@ export function ProductListPage() {
     };
   }, []);
 
+  useEffect(() => {
+    setVisibleCount(PRODUCTS_PER_PAGE);
+  }, [searchQuery, selectedCategory]);
+
   const visibleProducts = useMemo(() => {
     const normalizedQuery = normalizeSearchText(searchQuery);
 
@@ -89,6 +96,8 @@ export function ProductListPage() {
   const heading = selectedCategory
     ? categories.find((category) => category.slug === selectedCategory)?.name ?? "Produkter"
     : "Alla produkter";
+  const shownProducts = visibleProducts.slice(0, visibleCount);
+  const hasMoreProducts = visibleCount < visibleProducts.length;
   const emptyMessage = searchQuery ? `Inga produkter matchar "${searchQuery}".` : "Inga produkter hittades.";
 
   function clearSearch() {
@@ -118,12 +127,12 @@ export function ProductListPage() {
     <section className="storefront-layout">
       <CategoryFilter categories={categories} selectedSlug={selectedCategory} onChange={setSelectedCategory} />
 
-      <div>
+      <div className="product-list-content">
         <div className="page-heading">
           <div>
             <h1>{heading}</h1>
             <p>
-              Visar {visibleProducts.length} av {products.length} produkter
+              Visar {shownProducts.length} av {visibleProducts.length} produkter
             </p>
             {searchQuery ? (
               <p className="search-summary">
@@ -139,11 +148,25 @@ export function ProductListPage() {
         {visibleProducts.length === 0 ? (
           <p>{emptyMessage}</p>
         ) : (
-          <div className="product-grid">
-            {visibleProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          <>
+            <div className="product-grid">
+              {shownProducts.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+
+            {hasMoreProducts && (
+              <div className="load-more-row">
+                <button
+                  type="button"
+                  className="secondary-action"
+                  onClick={() => setVisibleCount((currentCount) => currentCount + PRODUCTS_PER_PAGE)}
+                >
+                  Visa fler produkter
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
     </section>
