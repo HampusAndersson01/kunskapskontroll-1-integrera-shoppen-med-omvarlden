@@ -41,12 +41,13 @@ export function AdminDashboardPage() {
 
   const activeProductCount = useMemo(() => products.filter((product) => product.isActive).length, [products]);
   const latestOrder = orders[0] ?? null;
+  const orderTotal = useMemo(() => orders.reduce((sum, order) => sum + order.totalPrice, 0), [orders]);
 
   if (loadState === "loading") {
     return (
       <section className="placeholder">
         <h1>Admin</h1>
-        <p>Laddar översikt.</p>
+        <p>Laddar oversikt.</p>
       </section>
     );
   }
@@ -55,7 +56,7 @@ export function AdminDashboardPage() {
     return (
       <section className="placeholder">
         <h1>Admin</h1>
-        <p>Översikten kunde inte hämtas från Supabase.</p>
+        <p>Oversikten kunde inte hamtas fran Supabase.</p>
       </section>
     );
   }
@@ -64,8 +65,8 @@ export function AdminDashboardPage() {
     <section className="admin-page">
       <div className="page-heading">
         <div>
-          <h1>Admin</h1>
-          <p>Enkel översikt över butikens produkter och ordrar.</p>
+          <h1>Admin Dashboard</h1>
+          <p>Oversikt over produkter, lager och ordrar.</p>
         </div>
       </div>
 
@@ -83,24 +84,25 @@ export function AdminDashboardPage() {
           <dd>{orders.length}</dd>
         </div>
         <div>
-          <dt>Senaste order</dt>
-          <dd>{latestOrder ? `${formatDate(latestOrder.createdAt)}, ${formatPrice(latestOrder.totalPrice)}` : "-"}</dd>
+          <dt>Ordervarde</dt>
+          <dd>{formatPrice(orderTotal)}</dd>
         </div>
       </dl>
 
-      <section>
-        <h2>Vanliga adminflöden</h2>
+      <section className="admin-card">
+        <h2>Nasta steg</h2>
         <ul className="admin-actions">
           <li>
             <Link href="/admin/products">Visa och redigera produkter</Link>
           </li>
           <li>
-            <Link href="/admin/products/new">Lägg till en ny produkt</Link>
+            <Link href="/admin/products/new">Lagg till en ny produkt</Link>
           </li>
           <li>
-            <Link href="/admin/orders">Visa ordrar och ändra status</Link>
+            <Link href="/admin/orders">Visa ordrar och andra status</Link>
           </li>
         </ul>
+        <p>Senaste order: {latestOrder ? `${formatDate(latestOrder.createdAt)}, ${formatPrice(latestOrder.totalPrice)}` : "-"}</p>
       </section>
     </section>
   );

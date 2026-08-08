@@ -43,7 +43,7 @@ export function AdminOrdersPage() {
   if (loadState === "loading") {
     return (
       <section className="placeholder">
-        <h1>Admin ordrar</h1>
+        <h1>Hantera ordrar</h1>
         <p>Laddar ordrar.</p>
       </section>
     );
@@ -52,8 +52,8 @@ export function AdminOrdersPage() {
   if (loadState === "error") {
     return (
       <section className="placeholder">
-        <h1>Admin ordrar</h1>
-        <p>Ordrarna kunde inte hämtas från Supabase.</p>
+        <h1>Hantera ordrar</h1>
+        <p>Ordrarna kunde inte hamtas fran Supabase.</p>
       </section>
     );
   }
@@ -62,13 +62,32 @@ export function AdminOrdersPage() {
     <section className="admin-page">
       <div className="page-heading">
         <div>
-          <h1>Admin ordrar</h1>
-          <p>Se kund, datum, status och totalpris för varje order.</p>
+          <h1>Hantera ordrar</h1>
+          <p>Se kund, datum, status och totalpris for varje order.</p>
         </div>
       </div>
 
+      <dl className="admin-summary">
+        <div>
+          <dt>Totalt</dt>
+          <dd>{orders.length}</dd>
+        </div>
+        <div>
+          <dt>Vantande</dt>
+          <dd>{orders.filter((order) => order.status === "pending").length}</dd>
+        </div>
+        <div>
+          <dt>Levererade</dt>
+          <dd>{orders.filter((order) => order.status === "delivered").length}</dd>
+        </div>
+        <div>
+          <dt>Omsattning</dt>
+          <dd>{formatPrice(orders.reduce((sum, order) => sum + order.totalPrice, 0))}</dd>
+        </div>
+      </dl>
+
       {orders.length === 0 ? (
-        <p>Inga ordrar finns ännu.</p>
+        <p>Inga ordrar finns annu.</p>
       ) : (
         <div className="table-wrap">
           <table className="data-table">
@@ -79,23 +98,27 @@ export function AdminOrdersPage() {
                 <th>Kund</th>
                 <th>Status</th>
                 <th>Total</th>
-                <th />
+                <th>Atgarder</th>
               </tr>
             </thead>
             <tbody>
               {orders.map((order) => (
                 <tr key={order.id}>
-                  <td>{shortOrderId(order.id)}</td>
+                  <td>
+                    <strong>#{shortOrderId(order.id)}</strong>
+                  </td>
                   <td>{formatDate(order.createdAt)}</td>
                   <td>
                     <strong>{order.customerName}</strong>
                     <br />
                     {order.customerEmail}
                   </td>
-                  <td>{getOrderStatusLabel(order.status)}</td>
+                  <td>
+                    <span className={getStatusBadgeClass(order.status)}>{getOrderStatusLabel(order.status)}</span>
+                  </td>
                   <td>{formatPrice(order.totalPrice)}</td>
                   <td>
-                    <Link href={`/admin/orders/${order.id}`}>Visa</Link>
+                    <Link href={`/admin/orders/${order.id}`}>Detaljer</Link>
                   </td>
                 </tr>
               ))}
@@ -116,4 +139,16 @@ function formatDate(value: string) {
 
 function shortOrderId(id: string) {
   return id.slice(0, 8);
+}
+
+function getStatusBadgeClass(status: string) {
+  if (status === "refunded") {
+    return "badge danger";
+  }
+
+  if (status === "delivered") {
+    return "badge neutral";
+  }
+
+  return status === "processing" ? "badge muted" : "badge";
 }

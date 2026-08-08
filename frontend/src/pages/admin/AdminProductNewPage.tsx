@@ -65,7 +65,7 @@ export function AdminProductNewPage() {
       window.history.pushState({}, "", `/admin/products/${product.id}/edit`);
       window.dispatchEvent(new PopStateEvent("popstate"));
     } catch {
-      setMessage("Produkten kunde inte sparas. Kontrollera att SKU är unik.");
+      setMessage("Produkten kunde inte sparas. Kontrollera att SKU ar unik.");
     } finally {
       setIsSubmitting(false);
     }
@@ -74,8 +74,8 @@ export function AdminProductNewPage() {
   if (loadState === "loading") {
     return (
       <section className="placeholder">
-        <h1>Lägg till produkt</h1>
-        <p>Laddar formulär.</p>
+        <h1>Lagg till produkt</h1>
+        <p>Laddar formular.</p>
       </section>
     );
   }
@@ -83,8 +83,8 @@ export function AdminProductNewPage() {
   if (loadState === "error") {
     return (
       <section className="placeholder">
-        <h1>Lägg till produkt</h1>
-        <p>Kategorierna kunde inte hämtas från Supabase.</p>
+        <h1>Lagg till produkt</h1>
+        <p>Kategorierna kunde inte hamtas fran Supabase.</p>
         <p>
           <Link href="/admin/products">Till produktlistan</Link>
         </p>
@@ -97,7 +97,12 @@ export function AdminProductNewPage() {
       <p>
         <Link href="/admin/products">Till produktlistan</Link>
       </p>
-      <h1>Lägg till produkt</h1>
+      <div className="page-heading">
+        <div>
+          <h1>Lagg till ny produkt</h1>
+          <p>Fyll i informationen nedan for att publicera en ny artikel.</p>
+        </div>
+      </div>
       <AdminProductForm
         categories={categories}
         initialValues={emptyProduct}

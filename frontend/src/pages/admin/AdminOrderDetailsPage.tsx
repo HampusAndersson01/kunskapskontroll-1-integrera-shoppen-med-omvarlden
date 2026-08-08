@@ -92,7 +92,7 @@ export function AdminOrderDetailsPage({ path }: PageProps) {
     return (
       <section className="placeholder">
         <h1>Orderdetaljer</h1>
-        <p>Ordern kunde inte hämtas från Supabase.</p>
+        <p>Ordern kunde inte hamtas fran Supabase.</p>
         <p>
           <Link href="/admin/orders">Till orderlistan</Link>
         </p>
@@ -119,15 +119,15 @@ export function AdminOrderDetailsPage({ path }: PageProps) {
 
       <div className="page-heading">
         <div>
-          <h1>Order {order.id.slice(0, 8)}</h1>
+          <h1>Order #{order.id.slice(0, 8)}</h1>
           <p>
-            {formatDate(order.createdAt)} · {getOrderStatusLabel(order.status)} · {formatPrice(order.totalPrice)}
+            {formatDate(order.createdAt)} - {getOrderStatusLabel(order.status)} - {formatPrice(order.totalPrice)}
           </p>
         </div>
       </div>
 
       <div className="admin-detail-grid">
-        <section>
+        <section className="admin-card">
           <h2>Kund</h2>
           <dl className="admin-facts">
             <div>
@@ -145,7 +145,7 @@ export function AdminOrderDetailsPage({ path }: PageProps) {
           </dl>
         </section>
 
-        <section>
+        <section className="admin-card">
           <h2>Leverans</h2>
           <dl className="admin-facts">
             <div>
@@ -154,9 +154,7 @@ export function AdminOrderDetailsPage({ path }: PageProps) {
             </div>
             <div>
               <dt>Postort</dt>
-              <dd>
-                {[order.shippingPostalCode, order.shippingCity].filter(Boolean).join(" ") || "-"}
-              </dd>
+              <dd>{[order.shippingPostalCode, order.shippingCity].filter(Boolean).join(" ") || "-"}</dd>
             </div>
             <div>
               <dt>Land</dt>
@@ -166,7 +164,7 @@ export function AdminOrderDetailsPage({ path }: PageProps) {
         </section>
       </div>
 
-      <section>
+      <section className="admin-card">
         <h2>Produkter</h2>
         <div className="table-wrap">
           <table className="data-table">
@@ -174,7 +172,7 @@ export function AdminOrderDetailsPage({ path }: PageProps) {
               <tr>
                 <th>Produkt</th>
                 <th>Antal</th>
-                <th>Pris vid köp</th>
+                <th>Pris vid kop</th>
                 <th>Radtotal</th>
               </tr>
             </thead>
