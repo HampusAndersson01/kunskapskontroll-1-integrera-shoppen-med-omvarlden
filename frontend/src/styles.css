@@ -21,6 +21,15 @@ a {
   padding: 16px 20px;
 }
 
+.site-header-main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: end;
+  justify-content: space-between;
+  max-width: 900px;
+}
+
 .site-title {
   display: inline-block;
   margin-bottom: 12px;
@@ -30,10 +39,46 @@ a {
   text-decoration: none;
 }
 
+.header-search {
+  display: grid;
+  gap: 4px;
+  min-width: min(100%, 280px);
+  margin-bottom: 10px;
+}
+
+.header-search label {
+  font-weight: 700;
+}
+
+.header-search div {
+  display: flex;
+  gap: 8px;
+}
+
+.header-search input {
+  min-width: 0;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #999;
+  background: #fff;
+  font: inherit;
+}
+
+.header-search button,
+.search-summary button {
+  padding: 8px 12px;
+  border: 1px solid #444;
+  background: #eee;
+  color: #111;
+  font: inherit;
+  cursor: pointer;
+}
+
 .main-nav {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+  max-width: 900px;
 }
 
 .page {
@@ -141,6 +186,18 @@ a {
   border: 1px solid #999;
   background: #fff;
   font: inherit;
+}
+
+.search-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  margin: 8px 0 0;
+}
+
+.search-summary button {
+  padding: 4px 8px;
 }
 
 .product-grid {
