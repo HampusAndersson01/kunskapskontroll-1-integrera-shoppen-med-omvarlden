@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Link } from "../../components/Link";
+import type { PageProps } from "../../routes/routes";
 import { getOrderSummary, type CreatedOrder } from "../../services/orderService";
 import { formatPrice } from "../../utils/format";
-import type { PageProps } from "../../routes/routes";
 
 type LoadState = "loading" | "ready" | "error" | "not-found";
 
@@ -45,8 +45,8 @@ export function OrderConfirmationPage({ path }: PageProps) {
 
   if (loadState === "loading") {
     return (
-      <section className="placeholder">
-        <h1>Orderbekräftelse</h1>
+      <section className="placeholder auth-panel">
+        <h1>Orderbekraftelse</h1>
         <p>Laddar order.</p>
       </section>
     );
@@ -54,9 +54,9 @@ export function OrderConfirmationPage({ path }: PageProps) {
 
   if (loadState === "error") {
     return (
-      <section className="placeholder">
-        <h1>Orderbekräftelse</h1>
-        <p>Ordern skapades, men bekräftelsen kunde inte hämtas.</p>
+      <section className="placeholder auth-panel">
+        <h1>Orderbekraftelse</h1>
+        <p>Ordern skapades, men bekraftelsen kunde inte hamtas.</p>
         <p>Ordernummer: {orderId}</p>
         <p>
           <Link href="/">Till produkterna</Link>
@@ -67,7 +67,7 @@ export function OrderConfirmationPage({ path }: PageProps) {
 
   if (loadState === "not-found" || !order) {
     return (
-      <section className="placeholder">
+      <section className="placeholder auth-panel">
         <h1>Ordern hittades inte</h1>
         <p>
           <Link href="/">Till produkterna</Link>
@@ -77,14 +77,23 @@ export function OrderConfirmationPage({ path }: PageProps) {
   }
 
   return (
-    <section className="placeholder">
-      <h1>Orderbekräftelse</h1>
-      <p>Ordern är mottagen.</p>
-      <p>Ordernummer: {order.id}</p>
-      <p>Totalpris: {formatPrice(order.totalPrice)}</p>
-      <p>
-        <Link href="/">Till produkterna</Link>
-      </p>
+    <section className="placeholder auth-panel">
+      <span className="badge">Order mottagen</span>
+      <h1>Tack for din bestallning!</h1>
+      <p>Vi har tagit emot din order.</p>
+      <dl className="product-facts">
+        <div>
+          <dt>Ordernummer</dt>
+          <dd>{order.id}</dd>
+        </div>
+        <div>
+          <dt>Totalbelopp</dt>
+          <dd>{formatPrice(order.totalPrice)}</dd>
+        </div>
+      </dl>
+      <Link href="/" className="primary-action">
+        Tillbaka till produkter
+      </Link>
     </section>
   );
 }
