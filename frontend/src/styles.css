@@ -350,6 +350,42 @@ a {
   margin: 0 0 8px;
 }
 
+.admin-layout {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.admin-sidebar {
+  border-right: 1px solid #ddd;
+  padding-right: 18px;
+}
+
+.admin-sidebar h2 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+}
+
+.admin-sidebar nav {
+  display: grid;
+  gap: 8px;
+}
+
+.admin-sidebar a {
+  padding: 6px 0;
+}
+
+.admin-sidebar a.active {
+  color: #111;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.admin-content {
+  min-width: 0;
+}
+
 .admin-page h2 {
   margin-top: 0;
   font-size: 1.2rem;
@@ -357,6 +393,36 @@ a {
 
 .admin-page section {
   margin-top: 28px;
+}
+
+.admin-summary {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 16px;
+  margin: 24px 0 0;
+}
+
+.admin-summary div {
+  border: 1px solid #ddd;
+  padding: 12px;
+}
+
+.admin-summary dt {
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.admin-summary dd {
+  margin: 0;
+}
+
+.admin-actions {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.admin-actions li {
+  margin-bottom: 8px;
 }
 
 .product-form {
@@ -467,6 +533,26 @@ a {
   }
 
   .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-sidebar {
+    border-right: 0;
+    border-bottom: 1px solid #ddd;
+    padding: 0 0 16px;
+  }
+
+  .admin-sidebar nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .admin-summary {
     grid-template-columns: 1fr;
   }
 
