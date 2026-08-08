@@ -80,14 +80,15 @@ export function ProductListPage() {
         return true;
       }
 
-      const searchableText = [product.name, product.brand, product.categoryName]
-        .map(normalizeSearchText)
-        .join(" ");
+      const searchableText = [product.name, product.brand, product.categoryName].map(normalizeSearchText).join(" ");
 
       return searchableText.includes(normalizedQuery);
     });
   }, [products, searchQuery, selectedCategory]);
 
+  const heading = selectedCategory
+    ? categories.find((category) => category.slug === selectedCategory)?.name ?? "Produkter"
+    : "Alla produkter";
   const emptyMessage = searchQuery ? `Inga produkter matchar "${searchQuery}".` : "Inga produkter hittades.";
 
   function clearSearch() {
@@ -108,37 +109,43 @@ export function ProductListPage() {
     return (
       <section className="placeholder">
         <h1>Produkter</h1>
-        <p>Produkterna kunde inte hämtas från Supabase.</p>
+        <p>Produkterna kunde inte hamtas fran Supabase.</p>
       </section>
     );
   }
 
   return (
-    <section>
-      <div className="page-heading">
-        <div>
-          <h1>Produkter</h1>
-          {searchQuery ? (
-            <p className="search-summary">
-              <span>Visar resultat för "{searchQuery}".</span>
-              <button type="button" onClick={clearSearch}>
-                Rensa sökning
-              </button>
-            </p>
-          ) : null}
-        </div>
-        <CategoryFilter categories={categories} selectedSlug={selectedCategory} onChange={setSelectedCategory} />
-      </div>
+    <section className="storefront-layout">
+      <CategoryFilter categories={categories} selectedSlug={selectedCategory} onChange={setSelectedCategory} />
 
-      {visibleProducts.length === 0 ? (
-        <p>{emptyMessage}</p>
-      ) : (
-        <div className="product-grid">
-          {visibleProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
-          ))}
+      <div>
+        <div className="page-heading">
+          <div>
+            <h1>{heading}</h1>
+            <p>
+              Visar {visibleProducts.length} av {products.length} produkter
+            </p>
+            {searchQuery ? (
+              <p className="search-summary">
+                <span>Resultat for "{searchQuery}".</span>
+                <button type="button" onClick={clearSearch}>
+                  Rensa sokning
+                </button>
+              </p>
+            ) : null}
+          </div>
         </div>
-      )}
+
+        {visibleProducts.length === 0 ? (
+          <p>{emptyMessage}</p>
+        ) : (
+          <div className="product-grid">
+            {visibleProducts.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
+      </div>
     </section>
   );
 }
