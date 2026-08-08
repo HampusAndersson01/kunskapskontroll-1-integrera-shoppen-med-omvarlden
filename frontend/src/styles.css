@@ -209,6 +209,8 @@ img {
 
 .profile-menu {
   position: relative;
+  padding-bottom: 14px;
+  margin-bottom: -14px;
 }
 
 .profile-avatar {
@@ -243,7 +245,7 @@ img {
 
 .profile-dropdown {
   position: absolute;
-  top: calc(100% + 12px);
+  top: calc(100% - 2px);
   right: 0;
   z-index: 30;
   display: grid;
@@ -258,6 +260,15 @@ img {
   pointer-events: none;
   transform: translateY(-6px);
   transition: opacity 140ms ease, transform 140ms ease;
+}
+
+.profile-dropdown::before {
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  left: 0;
+  height: 14px;
+  content: "";
 }
 
 .profile-menu:hover .profile-dropdown,
