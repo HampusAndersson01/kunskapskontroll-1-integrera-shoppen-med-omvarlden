@@ -10,6 +10,15 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
     <>
       <CustomerHeader />
       <main className="page">{children}</main>
+      <footer className="site-footer">
+        <div className="site-footer-inner">
+          <div>
+            <strong>Everyday Market</strong>
+            <span>Kvalitetsprodukter for din vardag, levererade med omsorg.</span>
+          </div>
+          <span>© 2024 Everyday Market. Alla rattigheter forbehallna.</span>
+        </div>
+      </footer>
     </>
   );
 }
