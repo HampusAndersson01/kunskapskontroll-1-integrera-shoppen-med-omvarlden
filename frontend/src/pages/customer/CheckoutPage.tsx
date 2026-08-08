@@ -22,12 +22,12 @@ export function CheckoutPage() {
     setMessage("");
 
     if (!isSupabaseConfigured) {
-      setMessage("Supabase saknar inställningar.");
+      setMessage("Supabase saknar installningar.");
       return;
     }
 
     if (items.length === 0) {
-      setMessage("Varukorgen är tom.");
+      setMessage("Varukorgen ar tom.");
       return;
     }
 
@@ -49,7 +49,7 @@ export function CheckoutPage() {
       window.history.pushState({}, "", `/order-confirmation/${order.id}`);
       window.dispatchEvent(new PopStateEvent("popstate"));
     } catch {
-      setMessage("Ordern kunde inte skapas. Kontrollera Supabase-regler och försök igen.");
+      setMessage("Ordern kunde inte skapas. Kontrollera Supabase-regler och forsok igen.");
     } finally {
       setIsSubmitting(false);
     }
@@ -58,8 +58,8 @@ export function CheckoutPage() {
   if (items.length === 0) {
     return (
       <section className="placeholder">
-        <h1>Checkout</h1>
-        <p>Varukorgen är tom.</p>
+        <h1>Kassa</h1>
+        <p>Varukorgen ar tom.</p>
         <p>
           <Link href="/">Till produkterna</Link>
         </p>
@@ -69,42 +69,50 @@ export function CheckoutPage() {
 
   return (
     <section className="checkout-page">
-      <h1>Checkout</h1>
+      <div className="page-heading">
+        <div>
+          <h1>Kassa</h1>
+          <p>Betalningen ar simulerad i detta studentprojekt.</p>
+        </div>
+        <Link href="/cart">Tillbaka till varukorgen</Link>
+      </div>
 
       <div className="checkout-layout">
-        <form className="form-block checkout-form" onSubmit={handleSubmit}>
+        <form className="form-block checkout-form checkout-panel" onSubmit={handleSubmit}>
           <fieldset>
-            <legend>Kontaktuppgifter</legend>
-            <label>
-              Namn
-              <input
-                type="text"
-                value={customerName}
-                onChange={(event) => setCustomerName(event.target.value)}
-                required
-                autoComplete="name"
-              />
-            </label>
+            <legend>Kundinformation</legend>
+            <div className="form-row">
+              <label>
+                Namn
+                <input
+                  type="text"
+                  value={customerName}
+                  onChange={(event) => setCustomerName(event.target.value)}
+                  required
+                  autoComplete="name"
+                />
+              </label>
+
+              <label>
+                Telefon
+                <input
+                  type="tel"
+                  value={customerPhone}
+                  onChange={(event) => setCustomerPhone(event.target.value)}
+                  required
+                  autoComplete="tel"
+                />
+              </label>
+            </div>
 
             <label>
-              E-post
+              E-postadress
               <input
                 type="email"
                 value={customerEmail}
                 onChange={(event) => setCustomerEmail(event.target.value)}
                 required
                 autoComplete="email"
-              />
-            </label>
-
-            <label>
-              Telefon
-              <input
-                type="tel"
-                value={customerPhone}
-                onChange={(event) => setCustomerPhone(event.target.value)}
-                required
-                autoComplete="tel"
               />
             </label>
           </fieldset>
@@ -122,60 +130,77 @@ export function CheckoutPage() {
               />
             </label>
 
-            <label>
-              Postnummer
-              <input
-                type="text"
-                value={shippingPostalCode}
-                onChange={(event) => setShippingPostalCode(event.target.value)}
-                required
-                autoComplete="postal-code"
-              />
-            </label>
+            <div className="form-row">
+              <label>
+                Postnummer
+                <input
+                  type="text"
+                  value={shippingPostalCode}
+                  onChange={(event) => setShippingPostalCode(event.target.value)}
+                  required
+                  autoComplete="postal-code"
+                />
+              </label>
 
-            <label>
-              Ort
-              <input
-                type="text"
-                value={shippingCity}
-                onChange={(event) => setShippingCity(event.target.value)}
-                required
-                autoComplete="address-level2"
-              />
-            </label>
+              <label>
+                Ort
+                <input
+                  type="text"
+                  value={shippingCity}
+                  onChange={(event) => setShippingCity(event.target.value)}
+                  required
+                  autoComplete="address-level2"
+                />
+              </label>
 
-            <label>
-              Land
-              <input
-                type="text"
-                value={shippingCountry}
-                onChange={(event) => setShippingCountry(event.target.value)}
-                required
-                autoComplete="country-name"
-              />
-            </label>
+              <label>
+                Land
+                <input
+                  type="text"
+                  value={shippingCountry}
+                  onChange={(event) => setShippingCountry(event.target.value)}
+                  required
+                  autoComplete="country-name"
+                />
+              </label>
+            </div>
           </fieldset>
 
+          <p className="notice">Observera: inga riktiga transaktioner genomfors.</p>
+
           <button type="submit" disabled={isSubmitting || !isSupabaseConfigured}>
-            {isSubmitting ? "Skapar order..." : "Slutför köp"}
+            {isSubmitting ? "Skapar order..." : "Slutfor kop"}
           </button>
 
           {message && <p className="form-message">{message}</p>}
         </form>
 
         <aside className="order-summary">
-          <h2>Ordersammanfattning</h2>
-          <ul>
+          <h2>Din bestallning</h2>
+          <ul className="summary-list">
             {items.map((item) => (
-              <li key={item.productId}>
+              <li className="summary-item" key={item.productId}>
+                {item.imageUrl ? <img src={item.imageUrl} alt={item.name} /> : <span />}
                 <span>
-                  {item.name} x {item.quantity}
+                  <strong>{item.name}</strong>
+                  <span>Antal: {item.quantity}</span>
                 </span>
-                <span>{formatPrice(item.price * item.quantity)}</span>
+                <strong>{formatPrice(item.price * item.quantity)}</strong>
               </li>
             ))}
           </ul>
-          <p>Totalt: {formatPrice(totalPrice)}</p>
+          <div className="summary-row">
+            <span>Delsumma</span>
+            <span>{formatPrice(totalPrice)}</span>
+          </div>
+          <div className="summary-row">
+            <span>Frakt</span>
+            <strong>Gratis</strong>
+          </div>
+          <div className="summary-row total">
+            <span>Totalt</span>
+            <span>{formatPrice(totalPrice)}</span>
+          </div>
         </aside>
       </div>
     </section>
