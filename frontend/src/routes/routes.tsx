@@ -1,4 +1,5 @@
 import { AdminDashboardPage } from "../pages/admin/AdminDashboardPage";
+import { AdminLayout } from "../pages/admin/AdminLayout";
 import { AdminOrderDetailsPage } from "../pages/admin/AdminOrderDetailsPage";
 import { AdminOrdersPage } from "../pages/admin/AdminOrdersPage";
 import { AdminProductEditPage } from "../pages/admin/AdminProductEditPage";
@@ -127,5 +128,11 @@ export function renderRoute(route: RouteDefinition, path: string) {
   const Page = route.component;
   const page = <Page path={path} />;
 
-  return route.requiresAdmin ? <RequireAdmin>{page}</RequireAdmin> : page;
+  return route.requiresAdmin ? (
+    <RequireAdmin>
+      <AdminLayout currentPath={path}>{page}</AdminLayout>
+    </RequireAdmin>
+  ) : (
+    page
+  );
 }
