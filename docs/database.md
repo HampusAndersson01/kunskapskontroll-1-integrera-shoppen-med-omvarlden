@@ -18,6 +18,19 @@ Funktionen används av checkout-flödet för att skapa order och orderrader i sa
 - sparar `product_name`, `quantity` och `price_at_purchase` på orderraderna
 - sparar checkoutuppgifter på ordern: telefon, adress, postnummer, ort och land
 
-Migrationen måste finnas i Supabase innan checkout kan skapa riktiga ordrar.
+## Varukorg
+
+Migrationen `20260808110500_add_cart_policies.sql` lägger till RLS-regler för `carts` och `cart_items`.
+
+Varukorgen fungerar så här:
+
+- gäster använder `localStorage`
+- inloggade användare får en varukorg i Supabase
+- vid login slås lokal varukorg ihop med databasvarukorgen
+- användare kan bara läsa och ändra sin egen varukorg
+
+## Säkerhet
+
+Migrationerna måste finnas i Supabase innan checkout, adminflöden och databasvarukorg fungerar fullt ut.
 
 Lägg inte projektets access token, databaslösenord eller andra hemligheter i repot.

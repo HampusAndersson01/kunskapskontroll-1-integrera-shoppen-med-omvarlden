@@ -3,7 +3,7 @@ import { Link } from "../../components/Link";
 import { formatPrice } from "../../utils/format";
 
 export function CartPage() {
-  const { items, totalPrice, increaseQuantity, decreaseQuantity, removeItem, clearCart } = useCart();
+  const { items, totalPrice, isSyncing, increaseQuantity, decreaseQuantity, removeItem, clearCart } = useCart();
 
   if (items.length === 0) {
     return (
@@ -20,6 +20,7 @@ export function CartPage() {
   return (
     <section className="cart-page">
       <h1>Varukorg</h1>
+      {isSyncing && <p>Sparar varukorg.</p>}
 
       <div className="cart-items">
         {items.map((item) => (
