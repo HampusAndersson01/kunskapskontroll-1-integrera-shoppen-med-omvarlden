@@ -63,7 +63,7 @@ export function AdminProductEditPage({ path }: PageProps) {
       setProduct(updatedProduct);
       setMessage("Produkten sparades.");
     } catch {
-      setMessage("Produkten kunde inte sparas. Kontrollera att SKU ar unik.");
+      setMessage("Produkten kunde inte sparas. Kontrollera att SKU är unik.");
     } finally {
       setIsSubmitting(false);
     }
@@ -82,7 +82,7 @@ export function AdminProductEditPage({ path }: PageProps) {
     return (
       <section className="placeholder">
         <h1>Redigera produkt</h1>
-        <p>Produkten kunde inte hamtas fran Supabase.</p>
+        <p>Produkten kunde inte hämtas från Supabase.</p>
         <p>
           <Link href="/admin/products">Till produktlistan</Link>
         </p>
@@ -116,7 +116,7 @@ export function AdminProductEditPage({ path }: PageProps) {
         key={product.id}
         categories={categories}
         initialValues={mapProductToFormInput(product)}
-        submitLabel="Spara andringar"
+        submitLabel="Spara ändringar"
         isSubmitting={isSubmitting}
         onSubmit={handleSubmit}
       />

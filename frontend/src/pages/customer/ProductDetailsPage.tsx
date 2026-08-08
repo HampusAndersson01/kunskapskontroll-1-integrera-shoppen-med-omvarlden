@@ -65,7 +65,7 @@ export function ProductDetailsPage({ path }: PageProps) {
     return (
       <section className="placeholder">
         <h1>Produkt</h1>
-        <p>Produkten kunde inte hamtas fran Supabase.</p>
+        <p>Produkten kunde inte hämtas från Supabase.</p>
         <p>
           <Link href="/">Till produkterna</Link>
         </p>
@@ -115,7 +115,7 @@ export function ProductDetailsPage({ path }: PageProps) {
           )}
           {product.brand && (
             <div>
-              <dt>Varumarke</dt>
+              <dt>Varumärke</dt>
               <dd>{product.brand}</dd>
             </div>
           )}
@@ -139,7 +139,7 @@ export function ProductDetailsPage({ path }: PageProps) {
             setMessage("Produkten lades i varukorgen.");
           }}
         >
-          Lagg i varukorg
+          Lägg i varukorg
         </button>
         {message && <p className="form-message">{message}</p>}
       </aside>

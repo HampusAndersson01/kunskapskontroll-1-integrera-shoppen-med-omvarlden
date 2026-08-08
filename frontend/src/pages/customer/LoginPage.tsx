@@ -16,9 +16,9 @@ export function LoginPage() {
 
     try {
       await signIn(email, password);
-      setMessage("Du ar inloggad.");
+      setMessage("Du är inloggad.");
     } catch {
-      setMessage("Inloggningen misslyckades. Kontrollera e-post och losenord.");
+      setMessage("Inloggningen misslyckades. Kontrollera e-post och lösenord.");
     } finally {
       setIsSubmitting(false);
     }
@@ -28,9 +28,9 @@ export function LoginPage() {
     <section className="placeholder auth-panel">
       <span className="eyebrow">Everyday Market Admin</span>
       <h1>Logga in</h1>
-      <p>Logga in med e-post och losenord.</p>
+      <p>Logga in med e-post och lösenord.</p>
 
-      {!isConfigured && <p className="form-message">Supabase saknar installningar i frontend/.env.local.</p>}
+      {!isConfigured && <p className="form-message">Supabase saknar inställningar i frontend/.env.local.</p>}
 
       {user ? (
         <div className="form-block">
@@ -40,7 +40,7 @@ export function LoginPage() {
           </button>
           {role === "admin" && (
             <p>
-              <Link href="/admin">Ga till admin</Link>
+              <Link href="/admin">Gå till admin</Link>
             </p>
           )}
         </div>
@@ -58,7 +58,7 @@ export function LoginPage() {
           </label>
 
           <label>
-            Losenord
+            Lösenord
             <input
               type="password"
               value={password}

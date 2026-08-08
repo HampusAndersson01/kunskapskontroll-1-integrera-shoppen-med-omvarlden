@@ -53,7 +53,7 @@ export function AdminOrdersPage() {
     return (
       <section className="placeholder">
         <h1>Hantera ordrar</h1>
-        <p>Ordrarna kunde inte hamtas fran Supabase.</p>
+        <p>Ordrarna kunde inte hämtas från Supabase.</p>
       </section>
     );
   }
@@ -63,7 +63,7 @@ export function AdminOrdersPage() {
       <div className="page-heading">
         <div>
           <h1>Hantera ordrar</h1>
-          <p>Se kund, datum, status och totalpris for varje order.</p>
+          <p>Se kund, datum, status och totalpris för varje order.</p>
         </div>
       </div>
 
@@ -73,7 +73,7 @@ export function AdminOrdersPage() {
           <dd>{orders.length}</dd>
         </div>
         <div>
-          <dt>Vantande</dt>
+          <dt>Väntande</dt>
           <dd>{orders.filter((order) => order.status === "pending").length}</dd>
         </div>
         <div>
@@ -81,13 +81,13 @@ export function AdminOrdersPage() {
           <dd>{orders.filter((order) => order.status === "delivered").length}</dd>
         </div>
         <div>
-          <dt>Omsattning</dt>
+          <dt>Omsättning</dt>
           <dd>{formatPrice(orders.reduce((sum, order) => sum + order.totalPrice, 0))}</dd>
         </div>
       </dl>
 
       {orders.length === 0 ? (
-        <p>Inga ordrar finns annu.</p>
+        <p>Inga ordrar finns ännu.</p>
       ) : (
         <div className="table-wrap">
           <table className="data-table">
@@ -98,7 +98,7 @@ export function AdminOrdersPage() {
                 <th>Kund</th>
                 <th>Status</th>
                 <th>Total</th>
-                <th>Atgarder</th>
+                <th>Åtgärder</th>
               </tr>
             </thead>
             <tbody>

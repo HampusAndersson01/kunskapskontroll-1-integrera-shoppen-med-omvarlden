@@ -1,4 +1,5 @@
 import { useEffect, useState, type FormEvent } from "react";
+import { Search, ShoppingCart } from "lucide-react";
 import { useCart } from "../../cart/CartContext";
 import { Link } from "../../components/Link";
 import { useCurrentPath } from "../../routes/useCurrentPath";
@@ -45,9 +46,6 @@ export function CustomerHeader() {
           <Link href="/" className={currentPath === "/" ? "active" : undefined}>
             Produkter
           </Link>
-          <Link href="/cart" className={currentPath === "/cart" ? "active cart-link" : "cart-link"}>
-            Varukorg <span className="cart-count">{itemCount}</span>
-          </Link>
           <Link href="/login" className={currentPath === "/login" ? "active" : undefined}>
             Logga in
           </Link>
@@ -57,21 +55,30 @@ export function CustomerHeader() {
         </nav>
 
         <form className="header-search" role="search" onSubmit={handleSearchSubmit}>
-          <label htmlFor="product-search">Sok produkter</label>
+          <label htmlFor="product-search">Sök produkter</label>
           <div>
             <input
               id="product-search"
               name="search"
               type="search"
-              placeholder="Sok produkter..."
+              placeholder="Sök produkter..."
               value={productSearch}
               onChange={(event) => setProductSearch(event.target.value)}
             />
-            <button type="submit" aria-label="Sok produkter">
-              Sok
+            <button type="submit" aria-label="Sök produkter">
+              <Search size={22} strokeWidth={2.4} aria-hidden="true" />
             </button>
           </div>
         </form>
+
+        <Link
+          href="/cart"
+          className={currentPath === "/cart" ? "cart-icon-link active" : "cart-icon-link"}
+          aria-label={`Varukorg med ${itemCount} produkter`}
+        >
+          <ShoppingCart size={30} strokeWidth={2.4} aria-hidden="true" />
+          {itemCount > 0 && <span className="cart-count">{itemCount}</span>}
+        </Link>
       </div>
     </header>
   );

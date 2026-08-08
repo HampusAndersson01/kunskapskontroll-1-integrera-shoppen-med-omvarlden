@@ -14,9 +14,9 @@ export function CustomerLayout({ children }: CustomerLayoutProps) {
         <div className="site-footer-inner">
           <div>
             <strong>Everyday Market</strong>
-            <span>Kvalitetsprodukter for din vardag, levererade med omsorg.</span>
+            <span>Kvalitetsprodukter för din vardag, levererade med omsorg.</span>
           </div>
-          <span>© 2024 Everyday Market. Alla rattigheter forbehallna.</span>
+          <span>© 2026 Everyday Market. Alla rättigheter förbehållna.</span>
         </div>
       </footer>
     </>

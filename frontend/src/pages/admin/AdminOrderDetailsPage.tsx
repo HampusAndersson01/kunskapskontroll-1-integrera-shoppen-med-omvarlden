@@ -92,7 +92,7 @@ export function AdminOrderDetailsPage({ path }: PageProps) {
     return (
       <section className="placeholder">
         <h1>Orderdetaljer</h1>
-        <p>Ordern kunde inte hamtas fran Supabase.</p>
+        <p>Ordern kunde inte hämtas från Supabase.</p>
         <p>
           <Link href="/admin/orders">Till orderlistan</Link>
         </p>
@@ -172,7 +172,7 @@ export function AdminOrderDetailsPage({ path }: PageProps) {
               <tr>
                 <th>Produkt</th>
                 <th>Antal</th>
-                <th>Pris vid kop</th>
+                <th>Pris vid köp</th>
                 <th>Radtotal</th>
               </tr>
             </thead>

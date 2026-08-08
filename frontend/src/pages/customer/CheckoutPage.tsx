@@ -22,12 +22,12 @@ export function CheckoutPage() {
     setMessage("");
 
     if (!isSupabaseConfigured) {
-      setMessage("Supabase saknar installningar.");
+      setMessage("Supabase saknar inställningar.");
       return;
     }
 
     if (items.length === 0) {
-      setMessage("Varukorgen ar tom.");
+      setMessage("Varukorgen är tom.");
       return;
     }
 
@@ -49,7 +49,7 @@ export function CheckoutPage() {
       window.history.pushState({}, "", `/order-confirmation/${order.id}`);
       window.dispatchEvent(new PopStateEvent("popstate"));
     } catch {
-      setMessage("Ordern kunde inte skapas. Kontrollera Supabase-regler och forsok igen.");
+      setMessage("Ordern kunde inte skapas. Kontrollera Supabase-regler och försök igen.");
     } finally {
       setIsSubmitting(false);
     }
@@ -59,7 +59,7 @@ export function CheckoutPage() {
     return (
       <section className="placeholder">
         <h1>Kassa</h1>
-        <p>Varukorgen ar tom.</p>
+        <p>Varukorgen är tom.</p>
         <p>
           <Link href="/">Till produkterna</Link>
         </p>
@@ -72,7 +72,7 @@ export function CheckoutPage() {
       <div className="page-heading">
         <div>
           <h1>Kassa</h1>
-          <p>Betalningen ar simulerad i detta studentprojekt.</p>
+          <p>Betalningen är simulerad i detta studentprojekt.</p>
         </div>
         <Link href="/cart">Tillbaka till varukorgen</Link>
       </div>
@@ -166,17 +166,17 @@ export function CheckoutPage() {
             </div>
           </fieldset>
 
-          <p className="notice">Observera: inga riktiga transaktioner genomfors.</p>
+          <p className="notice">Observera: inga riktiga transaktioner genomförs.</p>
 
           <button type="submit" disabled={isSubmitting || !isSupabaseConfigured}>
-            {isSubmitting ? "Skapar order..." : "Slutfor kop"}
+            {isSubmitting ? "Skapar order..." : "Slutför köp"}
           </button>
 
           {message && <p className="form-message">{message}</p>}
         </form>
 
         <aside className="order-summary">
-          <h2>Din bestallning</h2>
+          <h2>Din beställning</h2>
           <ul className="summary-list">
             {items.map((item) => (
               <li className="summary-item" key={item.productId}>

@@ -29,7 +29,7 @@ export function ProductCard({ product }: ProductCardProps) {
           <span className={`stock-label ${stockClass}`}>{stockLabel}</span>
         </div>
         <button type="button" disabled={product.stock <= 0} onClick={() => addProduct(product)}>
-          Lagg i varukorg
+          Lägg i varukorg
         </button>
       </div>
     </article>

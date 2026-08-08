@@ -27,7 +27,7 @@ export function AdminProductForm({
     <form className="form-block product-form product-form-layout" onSubmit={handleSubmit}>
       <div className="product-form-main">
         <section className="admin-card form-section">
-          <h2>Grundlaggande information</h2>
+          <h2>Grundläggande information</h2>
           <label>
             Produktnamn
             <input
@@ -64,7 +64,7 @@ export function AdminProductForm({
             </label>
 
             <label>
-              Varumarke
+              Varumärke
               <input
                 type="text"
                 value={values.brand}
@@ -75,7 +75,7 @@ export function AdminProductForm({
         </section>
 
         <section className="admin-card form-section">
-          <h2>Lager och prissattning</h2>
+          <h2>Lager och prissättning</h2>
           <div className="form-row">
             <label>
               Pris (SEK)
@@ -131,7 +131,7 @@ export function AdminProductForm({
         <section className="admin-card form-section">
           <h2>Produktbild</h2>
           <div className="image-preview">
-            {values.imageUrl ? <img src={values.imageUrl} alt="Forhandsvisning" /> : <span>Bild visas har</span>}
+            {values.imageUrl ? <img src={values.imageUrl} alt="Förhandsvisning" /> : <span>Bild visas här</span>}
           </div>
           <label>
             Bild-URL

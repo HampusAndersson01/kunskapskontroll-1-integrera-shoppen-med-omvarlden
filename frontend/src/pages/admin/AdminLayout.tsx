@@ -9,7 +9,7 @@ type AdminLayoutProps = {
 const adminLinks = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/products", label: "Produkter" },
-  { href: "/admin/products/new", label: "Lagg till produkt" },
+  { href: "/admin/products/new", label: "Lägg till produkt" },
   { href: "/admin/orders", label: "Ordrar" },
 ];
 

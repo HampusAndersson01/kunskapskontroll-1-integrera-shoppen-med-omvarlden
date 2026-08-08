@@ -9,7 +9,7 @@ export function CartPage() {
     return (
       <section className="placeholder">
         <h1>Din varukorg</h1>
-        <p>Varukorgen ar tom.</p>
+        <p>Varukorgen är tom.</p>
         <p>
           <Link href="/">Till produkterna</Link>
         </p>
@@ -22,7 +22,7 @@ export function CartPage() {
       <div className="page-heading">
         <div>
           <h1>Din varukorg</h1>
-          <p>Se over dina produkter innan du gar vidare till kassan.</p>
+          <p>Se över dina produkter innan du går vidare till kassan.</p>
           {isSyncing && <p>Sparar varukorg.</p>}
         </div>
       </div>
@@ -76,13 +76,13 @@ export function CartPage() {
             <span>{formatPrice(totalPrice)}</span>
           </div>
           <Link href="/checkout" className="primary-action">
-            Ga till kassan
+            Gå till kassan
           </Link>
           <Link href="/" className="secondary-action">
-            Fortsatt handla
+            Fortsätt handla
           </Link>
           <button type="button" className="secondary-action" onClick={clearCart}>
-            Tom varukorg
+            Töm varukorg
           </button>
         </aside>
       </div>

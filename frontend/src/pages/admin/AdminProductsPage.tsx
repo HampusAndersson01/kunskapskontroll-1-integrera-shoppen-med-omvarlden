@@ -49,7 +49,7 @@ export function AdminProductsPage() {
     return (
       <section className="placeholder">
         <h1>Produkthantering</h1>
-        <p>Produkterna kunde inte hamtas fran Supabase.</p>
+        <p>Produkterna kunde inte hämtas från Supabase.</p>
       </section>
     );
   }
@@ -62,12 +62,12 @@ export function AdminProductsPage() {
           <p>Hantera butikens lager, priser och publicering.</p>
         </div>
         <Link href="/admin/products/new" className="primary-action">
-          Lagg till produkt
+          Lägg till produkt
         </Link>
       </div>
 
       {products.length === 0 ? (
-        <p>Inga produkter finns annu.</p>
+        <p>Inga produkter finns ännu.</p>
       ) : (
         <div className="table-wrap">
           <table className="data-table">
@@ -79,7 +79,7 @@ export function AdminProductsPage() {
                 <th>Pris</th>
                 <th>Lager</th>
                 <th>Status</th>
-                <th>Atgarder</th>
+                <th>Åtgärder</th>
               </tr>
             </thead>
             <tbody>

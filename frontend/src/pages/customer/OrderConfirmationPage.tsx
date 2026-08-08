@@ -56,7 +56,7 @@ export function OrderConfirmationPage({ path }: PageProps) {
     return (
       <section className="placeholder auth-panel">
         <h1>Orderbekraftelse</h1>
-        <p>Ordern skapades, men bekraftelsen kunde inte hamtas.</p>
+        <p>Ordern skapades, men bekräftelsen kunde inte hämtas.</p>
         <p>Ordernummer: {orderId}</p>
         <p>
           <Link href="/">Till produkterna</Link>
@@ -79,7 +79,7 @@ export function OrderConfirmationPage({ path }: PageProps) {
   return (
     <section className="placeholder auth-panel">
       <span className="badge">Order mottagen</span>
-      <h1>Tack for din bestallning!</h1>
+      <h1>Tack för din beställning!</h1>
       <p>Vi har tagit emot din order.</p>
       <dl className="product-facts">
         <div>

@@ -109,7 +109,7 @@ export function ProductListPage() {
     return (
       <section className="placeholder">
         <h1>Produkter</h1>
-        <p>Produkterna kunde inte hamtas fran Supabase.</p>
+        <p>Produkterna kunde inte hämtas från Supabase.</p>
       </section>
     );
   }
@@ -127,9 +127,9 @@ export function ProductListPage() {
             </p>
             {searchQuery ? (
               <p className="search-summary">
-                <span>Resultat for "{searchQuery}".</span>
+                <span>Resultat för "{searchQuery}".</span>
                 <button type="button" onClick={clearSearch}>
-                  Rensa sokning
+                  Rensa sökning
                 </button>
               </p>
             ) : null}

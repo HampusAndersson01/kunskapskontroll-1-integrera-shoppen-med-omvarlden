@@ -47,7 +47,7 @@ export function AdminDashboardPage() {
     return (
       <section className="placeholder">
         <h1>Admin</h1>
-        <p>Laddar oversikt.</p>
+        <p>Laddar översikt.</p>
       </section>
     );
   }
@@ -56,7 +56,7 @@ export function AdminDashboardPage() {
     return (
       <section className="placeholder">
         <h1>Admin</h1>
-        <p>Oversikten kunde inte hamtas fran Supabase.</p>
+        <p>Översikten kunde inte hämtas från Supabase.</p>
       </section>
     );
   }
@@ -66,7 +66,7 @@ export function AdminDashboardPage() {
       <div className="page-heading">
         <div>
           <h1>Admin Dashboard</h1>
-          <p>Oversikt over produkter, lager och ordrar.</p>
+          <p>Översikt över produkter, lager och ordrar.</p>
         </div>
       </div>
 
@@ -96,10 +96,10 @@ export function AdminDashboardPage() {
             <Link href="/admin/products">Visa och redigera produkter</Link>
           </li>
           <li>
-            <Link href="/admin/products/new">Lagg till en ny produkt</Link>
+            <Link href="/admin/products/new">Lägg till en ny produkt</Link>
           </li>
           <li>
-            <Link href="/admin/orders">Visa ordrar och andra status</Link>
+            <Link href="/admin/orders">Visa ordrar och ändra status</Link>
           </li>
         </ul>
         <p>Senaste order: {latestOrder ? `${formatDate(latestOrder.createdAt)}, ${formatPrice(latestOrder.totalPrice)}` : "-"}</p>
