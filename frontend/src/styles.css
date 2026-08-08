@@ -72,11 +72,34 @@ a {
   gap: 4px;
 }
 
-.form-block input {
+.form-block input,
+.form-block select,
+.form-block textarea {
   width: 100%;
   padding: 8px;
   border: 1px solid #999;
+  background: #fff;
   font: inherit;
+}
+
+.form-block textarea {
+  resize: vertical;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.form-block .checkbox-field {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.form-block .checkbox-field input {
+  width: auto;
 }
 
 .form-block button {
@@ -336,6 +359,10 @@ a {
   margin-top: 28px;
 }
 
+.product-form {
+  max-width: 720px;
+}
+
 .table-wrap {
   width: 100%;
   overflow-x: auto;
@@ -436,6 +463,10 @@ a {
   }
 
   .checkout-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row {
     grid-template-columns: 1fr;
   }
 
