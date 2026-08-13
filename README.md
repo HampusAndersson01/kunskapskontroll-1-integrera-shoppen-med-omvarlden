@@ -64,6 +64,17 @@ Supabase används för:
 
 Vanliga kundkonton ska ha rollen `customer`. Administratörskonton skapas manuellt i Supabase och får rollen `admin` i profilen. Användaren ska aldrig kunna välja rollen `admin` i registreringsformuläret.
 
+### Admin-inloggning för lärare
+
+Ett administratörskonto finns skapat i Supabase för granskning:
+
+```txt
+E-post: teacher.admin@example.com
+Lösenord: TeacherAdmin2026!
+```
+
+Logga in via `/login` och gå sedan till `/admin` för att hantera produkter och ordrar.
+
 Mappen `supabase/` innehåller schemafiler för att dokumentera databasstrukturen i repot. Databasen finns redan i Supabase, så baseline-migrationen är främst för versionshistorik och granskning.
 
 ## Databasdiagram
