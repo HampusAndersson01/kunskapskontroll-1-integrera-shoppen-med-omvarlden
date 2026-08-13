@@ -6,47 +6,29 @@ Detta projekt är en e-handelsplattform för skoluppgiften i systemutveckling. A
 
 ## Kom igång lokalt
 
-Projektet har en frontend i `frontend/`.
-
-Krav:
-
-```powershell
-node --version
-npm --version
-```
-
-Installera beroenden:
+Installera beroenden och skapa miljöfil:
 
 ```powershell
 npm install
-```
-
-Skapa lokal miljöfil vid behov:
-
-```powershell
 Copy-Item frontend\.env.example frontend\.env.local
 ```
 
-Fyll i Supabase-värden i `frontend/.env.local`:
+Lägg in Supabase-värden i `frontend/.env.local`:
 
 ```env
 VITE_SUPABASE_URL=
 VITE_SUPABASE_ANON_KEY=
 ```
 
-Starta frontend:
+Starta projektet:
 
 ```powershell
 npm run dev
 ```
 
-Standardadress:
+Öppna `http://localhost:5173`.
 
-```txt
-Frontend: http://localhost:5173
-```
-
-Kontrollera TypeScript och bygg projektet:
+Kontrollera projektet:
 
 ```powershell
 npm run typecheck
@@ -55,55 +37,7 @@ npm run build
 
 ## Deployment
 
-Projektet är förberett för Cloudflare Pages.
-
-Live:
-
-```txt
-https://ehandel.hampusandersson.dev
-```
-
-Cloudflare Pages URL:
-
-```txt
-https://min-egna-e-handel.pages.dev
-```
-
-Senaste deployment:
-
-```txt
-https://ea450f87.min-egna-e-handel.pages.dev
-```
-
-Cloudflare Pages-inställningar:
-
-```txt
-Project name: min-egna-e-handel
-Build command: npm run build
-Build output directory: frontend/dist
-Node version: 20 eller senare
-```
-
-Miljövariabler som behöver läggas in i Cloudflare Pages:
-
-```env
-VITE_SUPABASE_URL=
-VITE_SUPABASE_ANON_KEY=
-```
-
-Deploy via terminal:
-
-```powershell
-npm run deploy:pages
-```
-
-Lokal Cloudflare Pages-preview:
-
-```powershell
-npm run pages:preview
-```
-
-Subdomänen `ehandel.hampusandersson.dev` är kopplad som custom domain i Cloudflare Pages.
+[**ehandel.hampusandersson.dev/**](https://ehandel.hampusandersson.dev/)
 
 ## Supabase
 
