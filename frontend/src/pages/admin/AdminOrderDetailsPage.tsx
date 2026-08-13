@@ -119,15 +119,15 @@ export function AdminOrderDetailsPage({ path }: PageProps) {
 
       <div className="page-heading">
         <div>
-          <h1>Order {order.id.slice(0, 8)}</h1>
+          <h1>Order #{order.id.slice(0, 8)}</h1>
           <p>
-            {formatDate(order.createdAt)} · {getOrderStatusLabel(order.status)} · {formatPrice(order.totalPrice)}
+            {formatDate(order.createdAt)} - {getOrderStatusLabel(order.status)} - {formatPrice(order.totalPrice)}
           </p>
         </div>
       </div>
 
       <div className="admin-detail-grid">
-        <section>
+        <section className="admin-card">
           <h2>Kund</h2>
           <dl className="admin-facts">
             <div>
@@ -145,7 +145,7 @@ export function AdminOrderDetailsPage({ path }: PageProps) {
           </dl>
         </section>
 
-        <section>
+        <section className="admin-card">
           <h2>Leverans</h2>
           <dl className="admin-facts">
             <div>
@@ -154,9 +154,7 @@ export function AdminOrderDetailsPage({ path }: PageProps) {
             </div>
             <div>
               <dt>Postort</dt>
-              <dd>
-                {[order.shippingPostalCode, order.shippingCity].filter(Boolean).join(" ") || "-"}
-              </dd>
+              <dd>{[order.shippingPostalCode, order.shippingCity].filter(Boolean).join(" ") || "-"}</dd>
             </div>
             <div>
               <dt>Land</dt>
@@ -166,7 +164,7 @@ export function AdminOrderDetailsPage({ path }: PageProps) {
         </section>
       </div>
 
-      <section>
+      <section className="admin-card">
         <h2>Produkter</h2>
         <div className="table-wrap">
           <table className="data-table">

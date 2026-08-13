@@ -25,8 +25,9 @@ export function LoginPage() {
   }
 
   return (
-    <section className="placeholder">
-      <h1>Login</h1>
+    <section className="placeholder auth-panel">
+      <span className="eyebrow">Everyday Market Admin</span>
+      <h1>Logga in</h1>
       <p>Logga in med e-post och lösenord.</p>
 
       {!isConfigured && <p className="form-message">Supabase saknar inställningar i frontend/.env.local.</p>}

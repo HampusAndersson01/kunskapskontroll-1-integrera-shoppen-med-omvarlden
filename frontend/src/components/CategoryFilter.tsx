@@ -8,16 +8,27 @@ type CategoryFilterProps = {
 
 export function CategoryFilter({ categories, selectedSlug, onChange }: CategoryFilterProps) {
   return (
-    <label className="filter-field">
-      Kategori
-      <select value={selectedSlug} onChange={(event) => onChange(event.target.value)}>
-        <option value="">Alla kategorier</option>
+    <aside className="category-panel" aria-label="Produktkategorier">
+      <h2>Kategorier</h2>
+      <div className="category-filter-list">
+        <button
+          type="button"
+          className={selectedSlug ? "category-filter-button" : "category-filter-button active"}
+          onClick={() => onChange("")}
+        >
+          Alla produkter <span aria-hidden="true">&gt;</span>
+        </button>
         {categories.map((category) => (
-          <option key={category.id} value={category.slug}>
+          <button
+            key={category.id}
+            type="button"
+            className={selectedSlug === category.slug ? "category-filter-button active" : "category-filter-button"}
+            onClick={() => onChange(category.slug)}
+          >
             {category.name}
-          </option>
+          </button>
         ))}
-      </select>
-    </label>
+      </div>
+    </aside>
   );
 }

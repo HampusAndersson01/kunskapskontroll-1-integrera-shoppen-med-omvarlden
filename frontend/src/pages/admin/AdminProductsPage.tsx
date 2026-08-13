@@ -39,7 +39,7 @@ export function AdminProductsPage() {
   if (loadState === "loading") {
     return (
       <section className="placeholder">
-        <h1>Admin produkter</h1>
+        <h1>Produkthantering</h1>
         <p>Laddar produkter.</p>
       </section>
     );
@@ -48,7 +48,7 @@ export function AdminProductsPage() {
   if (loadState === "error") {
     return (
       <section className="placeholder">
-        <h1>Admin produkter</h1>
+        <h1>Produkthantering</h1>
         <p>Produkterna kunde inte hämtas från Supabase.</p>
       </section>
     );
@@ -58,10 +58,12 @@ export function AdminProductsPage() {
     <section className="admin-page">
       <div className="page-heading">
         <div>
-          <h1>Admin produkter</h1>
-          <p>Hantera produkter som visas i butiken.</p>
+          <h1>Produkthantering</h1>
+          <p>Hantera butikens lager, priser och publicering.</p>
         </div>
-        <Link href="/admin/products/new">Lägg till produkt</Link>
+        <Link href="/admin/products/new" className="primary-action">
+          Lägg till produkt
+        </Link>
       </div>
 
       {products.length === 0 ? (
@@ -71,26 +73,40 @@ export function AdminProductsPage() {
           <table className="data-table">
             <thead>
               <tr>
-                <th>Produkt</th>
+                <th>Bild</th>
+                <th>Namn</th>
                 <th>Kategori</th>
                 <th>Pris</th>
                 <th>Lager</th>
                 <th>Status</th>
-                <th />
+                <th>Åtgärder</th>
               </tr>
             </thead>
             <tbody>
               {products.map((product) => (
                 <tr key={product.id}>
                   <td>
+                    {product.imageUrl ? (
+                      <img className="admin-product-image" src={product.imageUrl} alt={product.name} />
+                    ) : (
+                      "-"
+                    )}
+                  </td>
+                  <td>
                     <strong>{product.name}</strong>
                     <br />
                     SKU: {product.sku}
                   </td>
-                  <td>{product.categoryName ?? "-"}</td>
+                  <td>
+                    <span className="badge muted">{product.categoryName ?? "Ingen kategori"}</span>
+                  </td>
                   <td>{formatPrice(product.price)}</td>
-                  <td>{product.stock}</td>
-                  <td>{product.isActive ? "Aktiv" : "Inaktiv"}</td>
+                  <td>{product.stock} st</td>
+                  <td>
+                    <span className={product.isActive ? "badge" : "badge neutral"}>
+                      {product.isActive ? "Aktiv" : "Inaktiv"}
+                    </span>
+                  </td>
                   <td>
                     <Link href={`/admin/products/${product.id}/edit`}>Redigera</Link>
                   </td>

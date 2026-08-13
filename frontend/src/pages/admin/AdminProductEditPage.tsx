@@ -106,7 +106,12 @@ export function AdminProductEditPage({ path }: PageProps) {
       <p>
         <Link href="/admin/products">Till produktlistan</Link>
       </p>
-      <h1>Redigera produkt</h1>
+      <div className="page-heading">
+        <div>
+          <h1>Redigera produkt</h1>
+          <p>Uppdatera information, lager och publiceringsstatus.</p>
+        </div>
+      </div>
       <AdminProductForm
         key={product.id}
         categories={categories}

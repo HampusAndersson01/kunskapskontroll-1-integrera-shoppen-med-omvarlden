@@ -7,7 +7,7 @@ type AdminLayoutProps = {
 };
 
 const adminLinks = [
-  { href: "/admin", label: "Översikt" },
+  { href: "/admin", label: "Dashboard" },
   { href: "/admin/products", label: "Produkter" },
   { href: "/admin/products/new", label: "Lägg till produkt" },
   { href: "/admin/orders", label: "Ordrar" },
@@ -15,9 +15,12 @@ const adminLinks = [
 
 export function AdminLayout({ currentPath, children }: AdminLayoutProps) {
   return (
-    <div className="admin-layout">
+    <div className="admin-shell">
       <aside className="admin-sidebar">
-        <h2>Admin</h2>
+        <div>
+          <h2>Admin Panel</h2>
+          <p>Everyday Market</p>
+        </div>
         <nav aria-label="Adminmeny">
           {adminLinks.map((link) => (
             <Link

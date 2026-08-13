@@ -97,7 +97,12 @@ export function AdminProductNewPage() {
       <p>
         <Link href="/admin/products">Till produktlistan</Link>
       </p>
-      <h1>Lägg till produkt</h1>
+      <div className="page-heading">
+        <div>
+          <h1>Lägg till ny produkt</h1>
+          <p>Fyll i informationen nedan för att publicera en ny artikel.</p>
+        </div>
+      </div>
       <AdminProductForm
         categories={categories}
         initialValues={emptyProduct}

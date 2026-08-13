@@ -84,32 +84,45 @@ export function ProductDetailsPage({ path }: PageProps) {
     );
   }
 
+  const stockLabel = product.stock > 0 ? `I lager - ${product.stock} st` : "Slut i lager";
+
   return (
     <section className="product-details">
-      <p>
-        <Link href="/">Till produkterna</Link>
+      <p className="product-detail-back">
+        <Link href="/">Tillbaka till produkter</Link>
       </p>
 
-      {product.imageUrl && <img src={product.imageUrl} alt={product.name} />}
+      <div className="product-media-panel">
+        {product.imageUrl ? <img src={product.imageUrl} alt={product.name} /> : <span>Ingen produktbild</span>}
+      </div>
 
-      <div>
+      <aside className="product-info-panel">
+        <span className="eyebrow">{product.brand ?? product.categoryName ?? "Everyday Market"}</span>
         <h1>{product.name}</h1>
-        <p>{product.description}</p>
+        <div className="price-row">
+          <span className="price">{formatPrice(product.price)}</span>
+          {product.discountPercentage > 0 && <span className="badge">Rabatt {product.discountPercentage}%</span>}
+        </div>
+        <p className={product.stock > 0 ? "stock-label" : "stock-label out"}>{stockLabel}</p>
+        {product.description && <p className="product-description">{product.description}</p>}
+
         <dl className="product-facts">
-          <div>
-            <dt>Pris</dt>
-            <dd>{formatPrice(product.price)}</dd>
-          </div>
-          <div>
-            <dt>Lager</dt>
-            <dd>{product.stock > 0 ? `${product.stock} i lager` : "Slut i lager"}</dd>
-          </div>
           {product.categoryName && (
             <div>
               <dt>Kategori</dt>
               <dd>{product.categoryName}</dd>
             </div>
           )}
+          {product.brand && (
+            <div>
+              <dt>Varumärke</dt>
+              <dd>{product.brand}</dd>
+            </div>
+          )}
+          <div>
+            <dt>SKU</dt>
+            <dd>{product.sku}</dd>
+          </div>
           {product.rating !== null && (
             <div>
               <dt>Betyg</dt>
@@ -129,7 +142,7 @@ export function ProductDetailsPage({ path }: PageProps) {
           Lägg i varukorg
         </button>
         {message && <p className="form-message">{message}</p>}
-      </div>
+      </aside>
     </section>
   );
 }

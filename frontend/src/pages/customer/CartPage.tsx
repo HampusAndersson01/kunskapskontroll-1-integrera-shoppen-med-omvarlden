@@ -8,7 +8,7 @@ export function CartPage() {
   if (items.length === 0) {
     return (
       <section className="placeholder">
-        <h1>Varukorg</h1>
+        <h1>Din varukorg</h1>
         <p>Varukorgen är tom.</p>
         <p>
           <Link href="/">Till produkterna</Link>
@@ -19,49 +19,74 @@ export function CartPage() {
 
   return (
     <section className="cart-page">
-      <h1>Varukorg</h1>
-      {isSyncing && <p>Sparar varukorg.</p>}
-
-      <div className="cart-items">
-        {items.map((item) => (
-          <article className="cart-item" key={item.productId}>
-            {item.imageUrl && <img src={item.imageUrl} alt={item.name} />}
-
-            <div>
-              <h2>{item.name}</h2>
-              <p>{formatPrice(item.price)} styck</p>
-              <p>{formatPrice(item.price * item.quantity)} totalt</p>
-            </div>
-
-            <div className="quantity-controls" aria-label={`Antal för ${item.name}`}>
-              <button type="button" onClick={() => decreaseQuantity(item.productId)}>
-                -
-              </button>
-              <span>{item.quantity}</span>
-              <button
-                type="button"
-                onClick={() => increaseQuantity(item.productId)}
-                disabled={item.quantity >= item.stock}
-              >
-                +
-              </button>
-            </div>
-
-            <button type="button" onClick={() => removeItem(item.productId)}>
-              Ta bort
-            </button>
-          </article>
-        ))}
+      <div className="page-heading">
+        <div>
+          <h1>Din varukorg</h1>
+          <p>Se över dina produkter innan du går vidare till kassan.</p>
+          <p className="sr-only" aria-live="polite">
+            {isSyncing ? "Sparar varukorg." : ""}
+          </p>
+        </div>
       </div>
 
-      <div className="cart-summary">
-        <p>Totalt: {formatPrice(totalPrice)}</p>
-        <p>
-          <Link href="/checkout">Gå till checkout</Link>
-        </p>
-        <button type="button" onClick={clearCart}>
-          Töm varukorg
-        </button>
+      <div className="cart-layout">
+        <div className="cart-items">
+          {items.map((item) => (
+            <article className="cart-item" key={item.productId}>
+              {item.imageUrl ? <img src={item.imageUrl} alt={item.name} /> : <span />}
+
+              <div>
+                <h2>{item.name}</h2>
+                <p>{formatPrice(item.price)} styck</p>
+                <button className="remove-button" type="button" onClick={() => removeItem(item.productId)}>
+                  Ta bort
+                </button>
+              </div>
+
+              <div className="quantity-stack">
+                <div className="quantity-controls" aria-label={`Antal for ${item.name}`}>
+                  <button type="button" onClick={() => decreaseQuantity(item.productId)}>
+                    -
+                  </button>
+                  <span>{item.quantity}</span>
+                  <button
+                    type="button"
+                    onClick={() => increaseQuantity(item.productId)}
+                    disabled={item.quantity >= item.stock}
+                  >
+                    +
+                  </button>
+                </div>
+                <strong>{formatPrice(item.price * item.quantity)}</strong>
+              </div>
+            </article>
+          ))}
+        </div>
+
+        <aside className="cart-summary">
+          <h2>Ordersammanfattning</h2>
+          <div className="summary-row">
+            <span>Delsumma</span>
+            <span>{formatPrice(totalPrice)}</span>
+          </div>
+          <div className="summary-row">
+            <span>Frakt</span>
+            <strong>Gratis</strong>
+          </div>
+          <div className="summary-row total">
+            <span>Total</span>
+            <span>{formatPrice(totalPrice)}</span>
+          </div>
+          <Link href="/checkout" className="primary-action">
+            Gå till kassan
+          </Link>
+          <Link href="/" className="secondary-action">
+            Fortsätt handla
+          </Link>
+          <button type="button" className="secondary-action" onClick={clearCart}>
+            Töm varukorg
+          </button>
+        </aside>
       </div>
     </section>
   );
