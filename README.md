@@ -39,18 +39,7 @@ npm run build
 
 [**ehandel.hampusandersson.dev/**](https://ehandel.hampusandersson.dev/)
 
-## Supabase
-
-Supabase används för:
-
-- login med Supabase Auth
-- produkter, kategorier, varukorgar och ordrar
-- adminbehörighet via `profiles.role`
-- RLS och databasregler
-
-Vanliga kundkonton ska ha rollen `customer`. Administratörskonton skapas manuellt i Supabase och får rollen `admin` i profilen. Användaren ska aldrig kunna välja rollen `admin` i registreringsformuläret.
-
-### Admin-inloggning för lärare
+### Admin-inloggning
 
 Ett administratörskonto finns skapat i Supabase för granskning:
 
@@ -61,7 +50,16 @@ Lösenord: TeacherAdmin2026!
 
 Logga in via `/login` och gå sedan till `/admin` för att hantera produkter och ordrar.
 
-Mappen `supabase/` innehåller schemafiler för att dokumentera databasstrukturen i repot. Databasen finns redan i Supabase, så baseline-migrationen är främst för versionshistorik och granskning.
+## Supabase
+
+Supabase används för:
+
+- login med Supabase Auth
+- produkter, kategorier, varukorgar och ordrar
+- adminbehörighet via `profiles.role`
+- RLS och databasregler
+
+Vanliga kundkonton ska ha rollen `customer`. Administratörskonton skapas manuellt i Supabase och får rollen `admin` i profilen. Användaren ska aldrig kunna välja rollen `admin` i registreringsformuläret.
 
 ## Databasdiagram
 
