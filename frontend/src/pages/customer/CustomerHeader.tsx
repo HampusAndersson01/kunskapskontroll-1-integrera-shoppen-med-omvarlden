@@ -24,6 +24,16 @@ function getInitials(email: string | undefined) {
   return namePart.slice(0, 2).toUpperCase();
 }
 
+function getLoginPath() {
+  const currentPath = window.location.pathname + window.location.search;
+
+  if (currentPath === "/login" || currentPath.startsWith("/login?") || currentPath === "/register") {
+    return "/login";
+  }
+
+  return `/login?next=${encodeURIComponent(currentPath)}`;
+}
+
 export function CustomerHeader() {
   const { itemCount } = useCart();
   const { isAdmin, signOut, user } = useAuth();
@@ -102,7 +112,7 @@ export function CustomerHeader() {
                   Logga ut
                 </button>
               ) : (
-                <Link href="/login" className="profile-menu-item">
+                <Link href={getLoginPath()} className="profile-menu-item">
                   <LogIn size={18} strokeWidth={2.4} aria-hidden="true" />
                   Logga in
                 </Link>

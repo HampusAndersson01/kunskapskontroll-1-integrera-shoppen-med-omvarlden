@@ -1,13 +1,34 @@
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { useAuth } from "../../auth/AuthContext";
 import { Link } from "../../components/Link";
 
+function getRedirectPath() {
+  const nextPath = new URLSearchParams(window.location.search).get("next");
+
+  if (!nextPath || !nextPath.startsWith("/") || nextPath.startsWith("//") || nextPath.startsWith("/login")) {
+    return "/";
+  }
+
+  return nextPath;
+}
+
+function navigateTo(path: string) {
+  window.history.replaceState({}, "", path);
+  window.dispatchEvent(new PopStateEvent("popstate"));
+}
+
 export function LoginPage() {
-  const { isConfigured, signIn, signOut, user, role } = useAuth();
+  const { isConfigured, signIn, user } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      navigateTo(getRedirectPath());
+    }
+  }, [user]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -16,12 +37,16 @@ export function LoginPage() {
 
     try {
       await signIn(email, password);
-      setMessage("Du är inloggad.");
+      navigateTo(getRedirectPath());
     } catch {
       setMessage("Inloggningen misslyckades. Kontrollera e-post och lösenord.");
     } finally {
       setIsSubmitting(false);
     }
+  }
+
+  if (user) {
+    return <></>;
   }
 
   return (
@@ -32,47 +57,33 @@ export function LoginPage() {
 
       {!isConfigured && <p className="form-message">Supabase saknar inställningar i frontend/.env.local.</p>}
 
-      {user ? (
-        <div className="form-block">
-          <p>Inloggad som {user.email}. Roll: {role ?? "saknas"}.</p>
-          <button type="button" onClick={() => void signOut()}>
-            Logga ut
-          </button>
-          {role === "admin" && (
-            <p>
-              <Link href="/admin">Gå till admin</Link>
-            </p>
-          )}
-        </div>
-      ) : (
-        <form className="form-block" onSubmit={handleSubmit}>
-          <label>
-            E-post
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              required
-              autoComplete="email"
-            />
-          </label>
+      <form className="form-block" onSubmit={handleSubmit}>
+        <label>
+          E-post
+          <input
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+            autoComplete="email"
+          />
+        </label>
 
-          <label>
-            Lösenord
-            <input
-              type="password"
-              value={password}
-              onChange={(event) => setPassword(event.target.value)}
-              required
-              autoComplete="current-password"
-            />
-          </label>
+        <label>
+          Lösenord
+          <input
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+            autoComplete="current-password"
+          />
+        </label>
 
-          <button type="submit" disabled={isSubmitting || !isConfigured}>
-            {isSubmitting ? "Loggar in..." : "Logga in"}
-          </button>
-        </form>
-      )}
+        <button type="submit" disabled={isSubmitting || !isConfigured}>
+          {isSubmitting ? "Loggar in..." : "Logga in"}
+        </button>
+      </form>
 
       {message && <p className="form-message">{message}</p>}
 
