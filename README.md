@@ -53,6 +53,58 @@ npm run typecheck
 npm run build
 ```
 
+## Deployment
+
+Projektet är förberett för Cloudflare Pages.
+
+Nuvarande deploy:
+
+```txt
+https://min-egna-e-handel.pages.dev
+```
+
+Senaste deployment:
+
+```txt
+https://7f5c21be.min-egna-e-handel.pages.dev
+```
+
+Rekommenderad publik adress:
+
+```txt
+https://ehandel.hampusandersson.dev
+```
+
+Cloudflare Pages-inställningar:
+
+```txt
+Project name: min-egna-e-handel
+Build command: npm run build
+Build output directory: frontend/dist
+Node version: 20 eller senare
+```
+
+Miljövariabler som behöver läggas in i Cloudflare Pages:
+
+```env
+VITE_SUPABASE_URL=
+VITE_SUPABASE_ANON_KEY=
+```
+
+Deploy via terminal:
+
+```powershell
+npm run deploy:pages
+```
+
+Lokal Cloudflare Pages-preview:
+
+```powershell
+npm run pages:preview
+```
+
+Efter första deployen kan subdomänen `ehandel.hampusandersson.dev` kopplas som custom domain i Cloudflare Pages.
+
 ## Supabase
 
 Supabase används för:

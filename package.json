@@ -10,9 +10,14 @@
     "dev:frontend": "npm run dev --workspace frontend",
     "build": "npm run build --workspace frontend",
     "typecheck": "npm run typecheck --workspace frontend",
+    "pages:preview": "npm run build && npx wrangler pages dev frontend/dist",
+    "deploy:pages": "npm run build && npx wrangler pages deploy frontend/dist --project-name min-egna-e-handel",
     "seed-db": "node scripts/import-dummyjson-products.mjs"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "wrangler": "^4.123.0"
   }
 }
