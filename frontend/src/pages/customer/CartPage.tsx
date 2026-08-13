@@ -23,7 +23,9 @@ export function CartPage() {
         <div>
           <h1>Din varukorg</h1>
           <p>Se över dina produkter innan du går vidare till kassan.</p>
-          {isSyncing && <p>Sparar varukorg.</p>}
+          <p className="sr-only" aria-live="polite">
+            {isSyncing ? "Sparar varukorg." : ""}
+          </p>
         </div>
       </div>
 
