@@ -89,6 +89,18 @@ Sitemapen för e-handelsplattformen finns dokumenterad här:
 
 [docs/planning/sitemap.md](docs/planning/sitemap.md)
 
+## Tidsplan
+
+Tidsplanen för projektets arbetsfaser finns dokumenterad här:
+
+[docs/planning/time-plan.md](docs/planning/time-plan.md)
+
+## Inlämningschecklista
+
+En checklista som visar var uppgiftens G- och VG-krav uppfylls finns här:
+
+[docs/hand-in-checklist.md](docs/hand-in-checklist.md)
+
 ## Mockups
 
 UI-mockups för e-handelsplattformens planerade sidor finns skapade i Google Stitch:
