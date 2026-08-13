@@ -57,7 +57,13 @@ npm run build
 
 Projektet är förberett för Cloudflare Pages.
 
-Nuvarande deploy:
+Live:
+
+```txt
+https://ehandel.hampusandersson.dev
+```
+
+Cloudflare Pages URL:
 
 ```txt
 https://min-egna-e-handel.pages.dev
@@ -66,13 +72,7 @@ https://min-egna-e-handel.pages.dev
 Senaste deployment:
 
 ```txt
-https://7f5c21be.min-egna-e-handel.pages.dev
-```
-
-Rekommenderad publik adress:
-
-```txt
-https://ehandel.hampusandersson.dev
+https://ea450f87.min-egna-e-handel.pages.dev
 ```
 
 Cloudflare Pages-inställningar:
@@ -103,7 +103,7 @@ Lokal Cloudflare Pages-preview:
 npm run pages:preview
 ```
 
-Efter första deployen kan subdomänen `ehandel.hampusandersson.dev` kopplas som custom domain i Cloudflare Pages.
+Subdomänen `ehandel.hampusandersson.dev` är kopplad som custom domain i Cloudflare Pages.
 
 ## Supabase
 
