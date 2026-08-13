@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 import { useCart } from "../../cart/CartContext";
 import { Link } from "../../components/Link";
 import { isSupabaseConfigured } from "../../lib/supabase";
-import { createOrder } from "../../services/orderService";
+import { createOrder, rememberOrderSummary } from "../../services/orderService";
 import { formatPrice } from "../../utils/format";
 
 export function CheckoutPage() {
@@ -45,6 +45,7 @@ export function CheckoutPage() {
         items,
       });
 
+      rememberOrderSummary(order);
       clearCart();
       window.history.pushState({}, "", `/order-confirmation/${order.id}`);
       window.dispatchEvent(new PopStateEvent("popstate"));

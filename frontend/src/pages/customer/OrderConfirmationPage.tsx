@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "../../components/Link";
 import type { PageProps } from "../../routes/routes";
-import { getOrderSummary, type CreatedOrder } from "../../services/orderService";
+import { getOrderSummary, getRememberedOrderSummary, type CreatedOrder } from "../../services/orderService";
 import { formatPrice } from "../../utils/format";
 
 type LoadState = "loading" | "ready" | "error" | "not-found";
@@ -23,7 +23,15 @@ export function OrderConfirmationPage({ path }: PageProps) {
         }
 
         if (!orderSummary) {
-          setLoadState("not-found");
+          const rememberedOrderSummary = getRememberedOrderSummary(orderId);
+
+          if (!rememberedOrderSummary) {
+            setLoadState("not-found");
+            return;
+          }
+
+          setOrder(rememberedOrderSummary);
+          setLoadState("ready");
           return;
         }
 
@@ -31,6 +39,14 @@ export function OrderConfirmationPage({ path }: PageProps) {
         setLoadState("ready");
       } catch {
         if (active) {
+          const rememberedOrderSummary = getRememberedOrderSummary(orderId);
+
+          if (rememberedOrderSummary) {
+            setOrder(rememberedOrderSummary);
+            setLoadState("ready");
+            return;
+          }
+
           setLoadState("error");
         }
       }

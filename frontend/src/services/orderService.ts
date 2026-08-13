@@ -73,6 +73,13 @@ type AdminOrderItemRow = {
   price_at_purchase: number | string;
 };
 
+const LOCAL_ORDER_SUMMARIES_KEY = "min-egna-ehandel-order-summaries";
+const LOCAL_ORDER_SUMMARY_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 30;
+
+type StoredOrderSummary = CreatedOrder & {
+  createdAt: string;
+};
+
 export const orderStatusOptions: Array<{ value: OrderStatus; label: string }> = [
   { value: "pending", label: "Beställd" },
   { value: "processing", label: "Behandlas" },
@@ -126,6 +133,28 @@ export async function getOrderSummary(orderId: string): Promise<CreatedOrder | n
     ? {
         id: data.id,
         totalPrice: Number(data.total_price),
+      }
+    : null;
+}
+
+export function rememberOrderSummary(order: CreatedOrder) {
+  const summaries = readStoredOrderSummaries();
+  const nextSummaries = [
+    { ...order, createdAt: new Date().toISOString() },
+    ...summaries.filter((summary) => summary.id !== order.id),
+  ].slice(0, 10);
+
+  window.localStorage.setItem(LOCAL_ORDER_SUMMARIES_KEY, JSON.stringify(nextSummaries));
+}
+
+export function getRememberedOrderSummary(orderId: string): CreatedOrder | null {
+  const summaries = readStoredOrderSummaries();
+  const summary = summaries.find((storedSummary) => storedSummary.id === orderId);
+
+  return summary
+    ? {
+        id: summary.id,
+        totalPrice: summary.totalPrice,
       }
     : null;
 }
@@ -226,4 +255,41 @@ function mapAdminOrderDetails(row: AdminOrderRow): AdminOrderDetails {
 
 function normalizeOrderStatus(status: string): OrderStatus {
   return orderStatusOptions.some((option) => option.value === status) ? (status as OrderStatus) : "pending";
+}
+
+function readStoredOrderSummaries(): StoredOrderSummary[] {
+  try {
+    const storedValue = window.localStorage.getItem(LOCAL_ORDER_SUMMARIES_KEY);
+
+    if (!storedValue) {
+      return [];
+    }
+
+    const parsedValue = JSON.parse(storedValue);
+
+    if (!Array.isArray(parsedValue)) {
+      return [];
+    }
+
+    const now = Date.now();
+
+    return parsedValue.filter((value): value is StoredOrderSummary => {
+      if (!value || typeof value !== "object") {
+        return false;
+      }
+
+      const summary = value as StoredOrderSummary;
+      const createdAtTime = new Date(summary.createdAt).getTime();
+
+      return (
+        typeof summary.id === "string" &&
+        typeof summary.totalPrice === "number" &&
+        typeof summary.createdAt === "string" &&
+        Number.isFinite(createdAtTime) &&
+        now - createdAtTime <= LOCAL_ORDER_SUMMARY_MAX_AGE_MS
+      );
+    });
+  } catch {
+    return [];
+  }
 }
