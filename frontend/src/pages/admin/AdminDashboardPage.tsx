@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "../../components/Link";
-import { getAdminOrders, type AdminOrderListItem } from "../../services/orderService";
+import { getAdminOrders, getOrderStatusLabel, type AdminOrderListItem } from "../../services/orderService";
 import { getAdminProducts, type Product } from "../../services/productService";
 import { formatPrice } from "../../utils/format";
 
 type LoadState = "loading" | "ready" | "error";
+
+const historyWindowDays = 30;
 
 export function AdminDashboardPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -42,6 +44,19 @@ export function AdminDashboardPage() {
   const activeProductCount = useMemo(() => products.filter((product) => product.isActive).length, [products]);
   const latestOrder = orders[0] ?? null;
   const orderTotal = useMemo(() => orders.reduce((sum, order) => sum + order.totalPrice, 0), [orders]);
+  const recentOrders = useMemo(() => getOrdersWithinDays(orders, historyWindowDays), [orders]);
+  const recentOrderTotal = useMemo(
+    () => recentOrders.reduce((sum, order) => sum + order.totalPrice, 0),
+    [recentOrders],
+  );
+  const recentAverageOrder = recentOrders.length > 0 ? recentOrderTotal / recentOrders.length : 0;
+  const refundedRecentTotal = useMemo(
+    () =>
+      recentOrders
+        .filter((order) => order.status === "refunded")
+        .reduce((sum, order) => sum + order.totalPrice, 0),
+    [recentOrders],
+  );
 
   if (loadState === "loading") {
     return (
@@ -65,7 +80,7 @@ export function AdminDashboardPage() {
     <section className="admin-page">
       <div className="page-heading">
         <div>
-          <h1>Admin Dashboard</h1>
+          <h1>Adminöversikt</h1>
           <p>Översikt över produkter, lager och ordrar.</p>
         </div>
       </div>
@@ -84,28 +99,84 @@ export function AdminDashboardPage() {
           <dd>{orders.length}</dd>
         </div>
         <div>
-          <dt>Ordervarde</dt>
+          <dt>Ordervärde</dt>
           <dd>{formatPrice(orderTotal)}</dd>
         </div>
       </dl>
 
-      <section className="admin-card">
-        <h2>Nasta steg</h2>
-        <ul className="admin-actions">
-          <li>
-            <Link href="/admin/products">Visa och redigera produkter</Link>
-          </li>
-          <li>
-            <Link href="/admin/products/new">Lägg till en ny produkt</Link>
-          </li>
-          <li>
-            <Link href="/admin/orders">Visa ordrar och ändra status</Link>
-          </li>
-        </ul>
-        <p>Senaste order: {latestOrder ? `${formatDate(latestOrder.createdAt)}, ${formatPrice(latestOrder.totalPrice)}` : "-"}</p>
-      </section>
+      <div className="admin-detail-grid">
+        <section className="admin-card">
+          <h2>Senaste 30 dagar</h2>
+          <p>Orderhistorik baserat på skapade ordrar.</p>
+
+          <dl className="admin-summary">
+            <div>
+              <dt>Ordrar</dt>
+              <dd>{recentOrders.length}</dd>
+            </div>
+            <div>
+              <dt>Försäljning</dt>
+              <dd>{formatPrice(recentOrderTotal)}</dd>
+            </div>
+            <div>
+              <dt>Snittorder</dt>
+              <dd>{formatPrice(recentAverageOrder)}</dd>
+            </div>
+            <div>
+              <dt>Återbetalat</dt>
+              <dd>{formatPrice(refundedRecentTotal)}</dd>
+            </div>
+          </dl>
+
+          {recentOrders.length > 0 ? (
+            <dl className="admin-facts">
+              {recentOrders.slice(0, 5).map((order) => (
+                <div key={order.id}>
+                  <dt>{formatDate(order.createdAt)}</dt>
+                  <dd>
+                    <Link href={`/admin/orders/${order.id}`}>{formatPrice(order.totalPrice)}</Link>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          ) : (
+            <p>Det finns inga ordrar från de senaste 30 dagarna.</p>
+          )}
+        </section>
+
+        <section className="admin-card">
+          <h2>Senaste order</h2>
+          {latestOrder ? (
+            <>
+              <dl className="admin-facts">
+                <div>
+                  <dt>Datum</dt>
+                  <dd>{formatDate(latestOrder.createdAt)}</dd>
+                </div>
+                <div>
+                  <dt>Status</dt>
+                  <dd>{getOrderStatusLabel(latestOrder.status)}</dd>
+                </div>
+                <div>
+                  <dt>Total</dt>
+                  <dd>{formatPrice(latestOrder.totalPrice)}</dd>
+                </div>
+              </dl>
+              <Link href={`/admin/orders/${latestOrder.id}`}>Visa order</Link>
+            </>
+          ) : (
+            <p>Det finns inga ordrar ännu.</p>
+          )}
+        </section>
+      </div>
     </section>
   );
+}
+
+function getOrdersWithinDays(orders: AdminOrderListItem[], days: number) {
+  const startTime = Date.now() - days * 24 * 60 * 60 * 1000;
+
+  return orders.filter((order) => new Date(order.createdAt).getTime() >= startTime);
 }
 
 function formatDate(value: string) {

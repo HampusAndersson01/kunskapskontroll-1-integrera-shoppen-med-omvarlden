@@ -1031,24 +1031,6 @@ button:disabled,
   font-weight: 850;
 }
 
-.admin-actions {
-  display: grid;
-  gap: 12px;
-  max-width: 640px;
-  margin: 20px 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.admin-actions a {
-  display: block;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  background: var(--color-surface);
-  padding: 16px 18px;
-  text-decoration: none;
-}
-
 .admin-filter {
   display: grid;
   grid-template-columns: minmax(240px, 1fr) 180px 180px;
