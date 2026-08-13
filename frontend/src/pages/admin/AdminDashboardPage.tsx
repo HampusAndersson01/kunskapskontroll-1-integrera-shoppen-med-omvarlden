@@ -109,7 +109,7 @@ export function AdminDashboardPage() {
           <h2>Senaste 30 dagar</h2>
           <p>Orderhistorik baserat på skapade ordrar.</p>
 
-          <dl className="admin-summary">
+          <dl className="admin-report-list">
             <div>
               <dt>Ordrar</dt>
               <dd>{recentOrders.length}</dd>
@@ -129,16 +129,16 @@ export function AdminDashboardPage() {
           </dl>
 
           {recentOrders.length > 0 ? (
-            <dl className="admin-facts">
+            <div className="recent-order-list" aria-label="Senaste ordrar i perioden">
               {recentOrders.slice(0, 5).map((order) => (
-                <div key={order.id}>
-                  <dt>{formatDate(order.createdAt)}</dt>
-                  <dd>
-                    <Link href={`/admin/orders/${order.id}`}>{formatPrice(order.totalPrice)}</Link>
-                  </dd>
-                </div>
+                <Link key={order.id} href={`/admin/orders/${order.id}`}>
+                  <span>
+                    {formatDate(order.createdAt)} - {getOrderStatusLabel(order.status)}
+                  </span>
+                  <strong>{formatPrice(order.totalPrice)}</strong>
+                </Link>
               ))}
-            </dl>
+            </div>
           ) : (
             <p>Det finns inga ordrar från de senaste 30 dagarna.</p>
           )}
