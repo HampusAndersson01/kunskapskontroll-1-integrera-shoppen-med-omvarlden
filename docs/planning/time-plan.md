@@ -1,154 +1,154 @@
 # Tidsplan
 
-Denna tidsplan beskriver hur jag faktiskt arbetade med uppgiften. Jag började med att få databas, backendlogik och Supabase-koppling att fungera innan jag lade större tid på frontend och design.
+Denna tidsplan beskriver den planerade arbetsordningen för e-handelsprojektet. Planen är att först få databas, backendlogik och Supabase-koppling att fungera stabilt. Frontenden byggs därför först enkelt för testning och förbättras mer när de viktigaste funktionerna fungerar.
 
 ## Fas 1: Planering av databas och flöden
 
-Jag började med att planera vilka delar e-handeln behövde innehålla. Fokus låg först på datamodellen eftersom resten av projektet skulle bygga på att produkter, varukorgar och ordrar kunde sparas på rätt sätt.
+Målet med första fasen är att bestämma vilka delar e-handeln behöver innehålla och hur informationen ska sparas. Datamodellen prioriteras tidigt eftersom produkter, varukorgar och ordrar behöver fungera innan resten av appen kan byggas ordentligt.
 
-Arbete:
+Planerat arbete:
 
-- tog fram databasdiagram
-- tog fram sitemap för kundflöde och adminflöde
-- planerade tabeller för produkter, kategorier, profiler, varukorgar, ordrar och orderrader
-- bestämde att Supabase skulle användas för databas, auth och behörighet
-- planerade rollerna `customer` och `admin`
+- ta fram databasdiagram
+- ta fram sitemap för kundflöde och adminflöde
+- planera tabeller för produkter, kategorier, profiler, varukorgar, ordrar och orderrader
+- bestämma hur Supabase ska användas för databas, auth och behörighet
+- planera rollerna `customer` och `admin`
 
-Resultat:
+Planerat resultat:
 
-- databasdiagram finns i `docs/diagrams/database-er-diagram.eraser.md`
-- sitemap finns i `docs/planning/sitemap.md`
-- databasanteckningar finns i `docs/database.md`
+- databasdiagram i `docs/diagrams/database-er-diagram.eraser.md`
+- sitemap i `docs/planning/sitemap.md`
+- databasanteckningar i `docs/database.md`
 
 ## Fas 2: Backend och databas först
 
-Efter planeringen gick jag vidare med att få backenddelen att fungera. Vid det här läget fanns nästan ingen färdig frontend. Målet var att först säkerställa att appen kunde prata med Supabase och att rätt data kunde sparas och hämtas.
+I nästa fas ska backenddelen prioriteras. Frontenden behöver bara vara tillräcklig för att kunna testa kopplingen mot databasen. Målet är att först säkerställa att appen kan prata med Supabase och att rätt data kan sparas och hämtas.
 
-Arbete:
+Planerat arbete:
 
-- satte upp projektet med React, Vite och Supabase-klient
-- skapade miljövariabler för Supabase
-- byggde grundläggande services mot databasen
-- importerade demoprodukter från DummyJSON till Supabase
-- såg till att produkterna lästes från projektets egen databas istället för direkt från DummyJSON
+- sätta upp projektet med React, Vite och Supabase-klient
+- skapa miljövariabler för Supabase
+- bygga grundläggande services mot databasen
+- importera demoprodukter från DummyJSON till Supabase
+- se till att produkterna läses från projektets egen databas istället för direkt från DummyJSON
 
-Resultat:
+Planerat resultat:
 
-- Supabase-klienten finns i `frontend/src/lib/supabase.ts`
-- produktlogiken finns i `frontend/src/services/productService.ts`
-- importscripten finns i `scripts/import-dummyjson-products.mjs`
-- produktimporten dokumenteras i `docs/data-import.md`
+- Supabase-klient i `frontend/src/lib/supabase.ts`
+- produktlogik i `frontend/src/services/productService.ts`
+- importscripts i `scripts/import-dummyjson-products.mjs`
+- dokumentation för produktimport i `docs/data-import.md`
 
 ## Fas 3: Orderlogik och checkout i databasen
 
-När produktdatan fungerade gick jag vidare med själva köpflödet på databassidan. Jag prioriterade att ordern skulle skapas korrekt i databasen innan checkouten fick mer färdig design.
+När produktdatan fungerar ska köpflödet byggas på databassidan. Ordern ska skapas korrekt i databasen innan checkouten får en mer färdig frontenddesign.
 
-Arbete:
+Planerat arbete:
 
-- skapade databasfunktion för att skapa order och orderrader i samma flöde
-- validerade produkter, antal och kunduppgifter i databasen
-- räknade totalpris från produktpriserna i databasen
-- sparade produktnamn, antal och pris vid köptillfället på orderraderna
+- skapa databasfunktion för att skapa order och orderrader i samma flöde
+- validera produkter, antal och kunduppgifter i databasen
+- räkna totalpris från produktpriserna i databasen
+- spara produktnamn, antal och pris vid köptillfället på orderraderna
 
-Resultat:
+Planerat resultat:
 
-- checkoutfunktionen finns i `supabase/migrations/20260807164500_create_checkout_function.sql`
-- orderlogiken används från `frontend/src/services/orderService.ts`
-- checkouten skapar riktiga orderrader i Supabase
+- checkoutfunktion i `supabase/migrations/20260807164500_create_checkout_function.sql`
+- orderlogik i `frontend/src/services/orderService.ts`
+- checkout som skapar riktiga orderrader i Supabase
 
 ## Fas 4: Enkel frontend för att testa flöden
 
-När backendlogiken fungerade började jag bygga enklare vyer för att kunna testa flödena i webbläsaren. Frontenden var först ganska enkel och användes mest för att kontrollera att produkterna, varukorgen och checkouten fungerade.
+När backendlogiken finns på plats ska enkla vyer byggas för att kunna testa flödena i webbläsaren. Frontenden ska i detta steg vara funktionell, men inte nödvändigtvis färdigdesignad.
 
-Arbete:
+Planerat arbete:
 
-- skapade produktlista och produktdetaljsida
-- skapade varukorgssida
-- lade till knappar för att lägga produkter i varukorgen
-- byggde checkoutformulär för simulerad betalning
-- lade till orderbekräftelse efter köp
+- skapa produktlista och produktdetaljsida
+- skapa varukorgssida
+- lägga till knappar för att lägga produkter i varukorgen
+- bygga checkoutformulär för simulerad betalning
+- lägga till orderbekräftelse efter köp
 
-Resultat:
+Planerat resultat:
 
-- kundsidorna finns i `frontend/src/pages/customer/`
-- varukorgen hanteras i `frontend/src/cart/CartContext.tsx`
-- checkouten finns i `frontend/src/pages/customer/CheckoutPage.tsx`
+- kundsidor i `frontend/src/pages/customer/`
+- varukorgshantering i `frontend/src/cart/CartContext.tsx`
+- checkout i `frontend/src/pages/customer/CheckoutPage.tsx`
 
 ## Fas 5: Adminflöde och behörighet
 
-När kundflödet fungerade fortsatte jag med adminflödet. Här var fokus att administratörer skulle kunna hantera produkter och se ordrar, samtidigt som vanliga användare inte skulle kunna komma åt adminfunktionerna.
+När kundflödet fungerar ska adminflödet byggas. Fokus är att administratörer ska kunna hantera produkter och se ordrar, samtidigt som vanliga användare inte ska kunna komma åt adminfunktionerna.
 
-Arbete:
+Planerat arbete:
 
-- byggde skyddad adminrouting
-- hämtade användarens roll från `profiles`
-- lade till adminvy för produkter
-- lade till formulär för att skapa och redigera produkter
-- lade till orderlista och orderdetaljer
-- lade till möjlighet att ändra orderstatus
-- lade till RLS-policies för adminfunktioner
+- bygga skyddad adminrouting
+- hämta användarens roll från `profiles`
+- lägga till adminvy för produkter
+- lägga till formulär för att skapa och redigera produkter
+- lägga till orderlista och orderdetaljer
+- lägga till möjlighet att ändra orderstatus
+- lägga till RLS-policies för adminfunktioner
 
-Resultat:
+Planerat resultat:
 
-- adminskydd finns i `frontend/src/auth/RequireAdmin.tsx`
-- adminproduktsidor finns i `frontend/src/pages/admin/`
-- adminlogik för produkter finns i `frontend/src/services/productService.ts`
-- orderstatus kan ändras mellan `Beställd`, `Behandlas`, `Levererad` och `Återbetald`
-- adminpolicies finns i `supabase/migrations/20260808102000_add_admin_product_policies.sql`
+- adminskydd i `frontend/src/auth/RequireAdmin.tsx`
+- adminproduktsidor i `frontend/src/pages/admin/`
+- adminlogik för produkter i `frontend/src/services/productService.ts`
+- orderstatus som kan ändras mellan `Beställd`, `Behandlas`, `Levererad` och `Återbetald`
+- adminpolicies i `supabase/migrations/20260808102000_add_admin_product_policies.sql`
 
 ## Fas 6: Databaslagrad varukorg för VG
 
-Efter att grundkraven fungerade lade jag till databaslagrad varukorg för inloggade kunder. Gäster kan fortfarande använda varukorgen utan konto, men när en användare är inloggad sparas varukorgen i Supabase.
+Efter att grundkraven fungerar ska databaslagrad varukorg läggas till för inloggade kunder. Gäster ska fortfarande kunna använda varukorgen utan konto, men inloggade användares varukorgar ska sparas i Supabase.
 
-Arbete:
+Planerat arbete:
 
-- skapade service för `carts` och `cart_items`
-- hämtade eller skapade varukorg för inloggad användare
-- synkade varukorgen mot databasen
-- slog ihop lokal varukorg med databasvarukorg vid login
-- lade till RLS-regler så användare bara kan hantera sin egen varukorg
+- skapa service för `carts` och `cart_items`
+- hämta eller skapa varukorg för inloggad användare
+- synka varukorgen mot databasen
+- slå ihop lokal varukorg med databasvarukorg vid login
+- lägga till RLS-regler så användare bara kan hantera sin egen varukorg
 
-Resultat:
+Planerat resultat:
 
-- varukorgsservicen finns i `frontend/src/services/cartService.ts`
-- synkningen finns i `frontend/src/cart/CartContext.tsx`
-- cart-policies finns i `supabase/migrations/20260808110500_add_cart_policies.sql`
+- varukorgsservice i `frontend/src/services/cartService.ts`
+- synkning i `frontend/src/cart/CartContext.tsx`
+- cart-policies i `supabase/migrations/20260808110500_add_cart_policies.sql`
 
 ## Fas 7: Frontend, design och polering
 
-När funktionerna fungerade gick jag vidare med att göra gränssnittet mer komplett och lättare att använda. Då förbättrade jag layout, navigation, produktkort, adminvyer och responsivitet.
+När funktionerna fungerar ska mer tid läggas på gränssnittet. Då ska layout, navigation, produktkort, adminvyer och responsivitet förbättras.
 
-Arbete:
+Planerat arbete:
 
-- förbättrade produktlistan och produktdetaljsidan
-- byggde tydligare kundnavigation
-- förbättrade varukorg och checkout
-- förbättrade adminlayout och tabeller
-- lade till bättre texter, felmeddelanden och laddningslägen
-- testade att projektet kunde byggas
+- förbättra produktlistan och produktdetaljsidan
+- bygga tydligare kundnavigation
+- förbättra varukorg och checkout
+- förbättra adminlayout och tabeller
+- lägga till bättre texter, felmeddelanden och laddningslägen
+- testa att projektet kan byggas
 
-Resultat:
+Planerat resultat:
 
-- global styling finns i `frontend/src/styles.css`
-- kundlayout finns i `frontend/src/pages/customer/CustomerLayout.tsx`
-- adminlayout finns i `frontend/src/pages/admin/AdminLayout.tsx`
-- projektet kontrolleras med `npm run typecheck` och `npm run build`
+- global styling i `frontend/src/styles.css`
+- kundlayout i `frontend/src/pages/customer/CustomerLayout.tsx`
+- adminlayout i `frontend/src/pages/admin/AdminLayout.tsx`
+- kontroller med `npm run typecheck` och `npm run build`
 
 ## Fas 8: Deployment och inlämning
 
-Sist lade jag till deployment och dokumentation så att projektet skulle vara lätt att granska vid inlämning.
+Sist ska projektet deployas och dokumenteras så att det är enkelt att granska vid inlämning.
 
-Arbete:
+Planerat arbete:
 
-- lade till Cloudflare Pages-konfiguration
-- lade in deployment-länk i README
-- dokumenterade admininloggning för lärare
-- lade till inlämningschecklista
-- kontrollerade att GitHub-historiken visar flera steg i arbetet
+- lägga till Cloudflare Pages-konfiguration
+- lägga in deployment-länk i README
+- dokumentera admininloggning för lärare
+- lägga till inlämningschecklista
+- kontrollera att GitHub-historiken visar flera steg i arbetet
 
-Resultat:
+Planerat resultat:
 
-- deployment-länk finns i `README.md`
-- admininloggning för granskning finns i `README.md`
-- inlämningschecklista finns i `docs/hand-in-checklist.md`
-- Cloudflare-konfiguration finns i `wrangler.jsonc`
+- deployment-länk i `README.md`
+- admininloggning för granskning i `README.md`
+- inlämningschecklista i `docs/hand-in-checklist.md`
+- Cloudflare-konfiguration i `wrangler.jsonc`
