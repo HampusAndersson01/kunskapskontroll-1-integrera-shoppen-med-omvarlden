@@ -44,7 +44,7 @@ export function CartPage() {
               </div>
 
               <div className="quantity-stack">
-                <div className="quantity-controls" aria-label={`Antal for ${item.name}`}>
+                <div className="quantity-controls" aria-label={`Antal för ${item.name}`}>
                   <button type="button" onClick={() => decreaseQuantity(item.productId)}>
                     -
                   </button>
