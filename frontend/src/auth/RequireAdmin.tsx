@@ -2,6 +2,10 @@ import type { ReactNode } from "react";
 import { Link } from "../components/Link";
 import { useAuth } from "./AuthContext";
 
+function getLoginPath() {
+  return `/login?next=${encodeURIComponent(window.location.pathname + window.location.search)}`;
+}
+
 export function RequireAdmin({ children }: { children: ReactNode }) {
   const { status, user, isAdmin, isConfigured } = useAuth();
 
@@ -29,7 +33,7 @@ export function RequireAdmin({ children }: { children: ReactNode }) {
         <h1>Login krävs</h1>
         <p>Du behöver logga in som administratör för att se adminområdet.</p>
         <p>
-          <Link href="/login">Gå till login</Link>
+          <Link href={getLoginPath()}>Gå till login</Link>
         </p>
       </section>
     );
