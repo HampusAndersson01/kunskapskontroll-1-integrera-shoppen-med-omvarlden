@@ -1,7 +1,6 @@
 import { FormEvent, useState } from "react";
 import { useCart } from "../../cart/CartContext";
 import { Link } from "../../components/Link";
-import { isSupabaseConfigured } from "../../lib/supabase";
 import { createOrder, rememberOrderSummary } from "../../services/orderService";
 import { formatPrice } from "../../utils/format";
 
@@ -20,11 +19,6 @@ export function CheckoutPage() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setMessage("");
-
-    if (!isSupabaseConfigured) {
-      setMessage("Supabase saknar inställningar.");
-      return;
-    }
 
     if (items.length === 0) {
       setMessage("Varukorgen är tom.");
@@ -50,7 +44,7 @@ export function CheckoutPage() {
       window.history.pushState({}, "", `/order-confirmation/${order.id}`);
       window.dispatchEvent(new PopStateEvent("popstate"));
     } catch {
-      setMessage("Ordern kunde inte skapas. Kontrollera Supabase-regler och försök igen.");
+      setMessage("Ordern kunde inte skapas. Kontrollera uppgifterna, lagersaldot och anslutningen och försök igen.");
     } finally {
       setIsSubmitting(false);
     }
@@ -169,7 +163,7 @@ export function CheckoutPage() {
 
           <p className="notice">Observera: inga riktiga transaktioner genomförs.</p>
 
-          <button type="submit" disabled={isSubmitting || !isSupabaseConfigured}>
+          <button type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Skapar order..." : "Slutför köp"}
           </button>
 

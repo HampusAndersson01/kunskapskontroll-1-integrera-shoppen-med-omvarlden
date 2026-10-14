@@ -71,7 +71,7 @@ export function AdminDashboardPage() {
     return (
       <section className="placeholder">
         <h1>Admin</h1>
-        <p>Översikten kunde inte hämtas från Supabase.</p>
+        <p>Översikten kunde inte hämtas. Försök igen senare.</p>
       </section>
     );
   }

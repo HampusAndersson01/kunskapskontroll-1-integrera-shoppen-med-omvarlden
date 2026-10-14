@@ -82,7 +82,7 @@ export function AdminProductEditPage({ path }: PageProps) {
     return (
       <section className="placeholder">
         <h1>Redigera produkt</h1>
-        <p>Produkten kunde inte hämtas från Supabase.</p>
+        <p>Produkten kunde inte hämtas. Kontrollera att du är inloggad som administratör.</p>
         <p>
           <Link href="/admin/products">Till produktlistan</Link>
         </p>

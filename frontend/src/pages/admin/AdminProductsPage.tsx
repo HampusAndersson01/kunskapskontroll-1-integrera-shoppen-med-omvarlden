@@ -49,7 +49,7 @@ export function AdminProductsPage() {
     return (
       <section className="placeholder">
         <h1>Produkthantering</h1>
-        <p>Produkterna kunde inte hämtas från Supabase.</p>
+        <p>Produkterna kunde inte hämtas. Kontrollera att du är inloggad som administratör.</p>
       </section>
     );
   }

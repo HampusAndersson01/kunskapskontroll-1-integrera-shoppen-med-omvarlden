@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useCart } from "../../cart/CartContext";
 import { Link } from "../../components/Link";
-import { isSupabaseConfigured } from "../../lib/supabase";
 import type { PageProps } from "../../routes/routes";
 import { getActiveProductById, type Product } from "../../services/productService";
 import { formatPrice } from "../../utils/format";
@@ -19,11 +18,6 @@ export function ProductDetailsPage({ path }: PageProps) {
     let active = true;
 
     async function loadProduct() {
-      if (!isSupabaseConfigured) {
-        setLoadState("error");
-        return;
-      }
-
       try {
         const productRow = await getActiveProductById(productId);
 
@@ -65,7 +59,7 @@ export function ProductDetailsPage({ path }: PageProps) {
     return (
       <section className="placeholder">
         <h1>Produkt</h1>
-        <p>Produkten kunde inte hämtas från Supabase.</p>
+        <p>Produkten kunde inte hämtas. Försök igen senare.</p>
         <p>
           <Link href="/">Till produkterna</Link>
         </p>

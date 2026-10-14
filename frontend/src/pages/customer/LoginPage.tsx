@@ -18,7 +18,7 @@ function navigateTo(path: string) {
 }
 
 export function LoginPage() {
-  const { isConfigured, signIn, user } = useAuth();
+  const { signIn, user } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -55,8 +55,6 @@ export function LoginPage() {
       <h1>Logga in</h1>
       <p>Logga in med e-post och lösenord.</p>
 
-      {!isConfigured && <p className="form-message">Supabase saknar inställningar i frontend/.env.local.</p>}
-
       <form className="form-block" onSubmit={handleSubmit}>
         <label>
           E-post
@@ -80,7 +78,7 @@ export function LoginPage() {
           />
         </label>
 
-        <button type="submit" disabled={isSubmitting || !isConfigured}>
+        <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Loggar in..." : "Logga in"}
         </button>
       </form>

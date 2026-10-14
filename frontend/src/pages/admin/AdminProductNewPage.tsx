@@ -84,7 +84,7 @@ export function AdminProductNewPage() {
     return (
       <section className="placeholder">
         <h1>Lägg till produkt</h1>
-        <p>Kategorierna kunde inte hämtas från Supabase.</p>
+        <p>Kategorierna kunde inte hämtas. Försök igen senare.</p>
         <p>
           <Link href="/admin/products">Till produktlistan</Link>
         </p>

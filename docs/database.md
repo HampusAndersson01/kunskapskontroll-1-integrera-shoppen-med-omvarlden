@@ -1,36 +1,35 @@
 # Databas
 
-Projektet använder Supabase direkt från frontend.
+Appens runtime använder PostgreSQL via Express. Compose startar en vanlig
+PostgreSQL-container med beständig volym. SQL-migrationerna finns i
+`backend/src/db/migrations/` och körs automatiskt innan backend startar.
 
-Mappen `supabase/` innehåller databasändringar som kod. Den behövs inte för att React-appen ska köra lokalt, men den är bra att ha i repot när databasen får nya funktioner eller policies.
+## Tabeller
 
-## Checkout
+- `users`: e-post, lösenordshash och rollen `customer` eller `admin`.
+- `categories` och `products`: butikens katalog och produktfält.
+- `carts` och `cart_items`: en databasvarukorg per inloggad användare.
+- `orders` och `order_items`: gäst- och kundordrar med prisögonblicksbilder.
+- `session`: sessionslagring som skapas av Express-sessionens PostgreSQL-store.
 
-Migrationen `20260807164500_create_checkout_function.sql` skapar funktionen `create_order_with_items`.
+RLS och Supabase Auth används inte. Express kontrollerar inloggning och
+adminroll på varje skyddad route. Cart-routes hämtar ägar-ID från sessionen,
+aldrig från klientens request. Checkout kör lagerkontroll, prisberäkning och
+order/orderrad-insert i samma PostgreSQL-transaktion. PostgreSQL-constraintsen
+är ett extra skydd för produkt-, cart- och orderdata.
 
-Funktionen används av checkout-flödet för att skapa order och orderrader i samma databastransaktion. Den:
+PostgreSQL-tabellen `users` ersätter de tidigare `auth.users`- och `profiles`-
+tabellerna. Tidigare row-level policies har flyttats till uttryckliga Express-
+kontroller, och checkoutvalidering körs nu i en PostgreSQL-transaktion.
 
-- validerar kundnamn och e-post
-- validerar telefon och leveransadress
-- validerar att varukorgen innehåller produkter
-- kontrollerar att produkterna är aktiva och att antal inte överstiger lager
-- räknar totalpriset från produktpriserna i databasen
-- sparar `product_name`, `quantity` och `price_at_purchase` på orderraderna
-- sparar checkoutuppgifter på ordern: telefon, adress, postnummer, ort och land
+## Lokal databas
 
-## Varukorg
+```powershell
+Copy-Item .env.example .env
+docker compose -f compose.yaml -f compose.dev.yaml up -d db
+npm run db:migrate
+```
 
-Migrationen `20260808110500_add_cart_policies.sql` lägger till RLS-regler för `carts` och `cart_items`.
-
-Varukorgen fungerar så här:
-
-- gäster använder `localStorage`
-- inloggade användare får en varukorg i Supabase
-- vid login slås lokal varukorg ihop med databasvarukorgen
-- användare kan bara läsa och ändra sin egen varukorg
-
-## Säkerhet
-
-Migrationerna måste finnas i Supabase innan checkout, adminflöden och databasvarukorg fungerar fullt ut.
-
-Lägg inte projektets access token, databaslösenord eller andra hemligheter i repot.
+I full Compose-körning startar backend efter att databasen är healthy och kör
+migrationerna själv. Gästvarukorgen ligger i `localStorage`; inloggade
+kunders varukorgar sparas i PostgreSQL och åtkomst kontrolleras via sessionen.

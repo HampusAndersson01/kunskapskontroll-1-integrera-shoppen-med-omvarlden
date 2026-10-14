@@ -1,6 +1,0 @@
-{
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "min-egna-e-handel",
-  "pages_build_output_dir": "frontend/dist",
-  "compatibility_date": "2026-08-13"
-}

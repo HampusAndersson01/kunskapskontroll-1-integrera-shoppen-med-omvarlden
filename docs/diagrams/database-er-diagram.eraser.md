@@ -2,16 +2,19 @@ title E-Commerce Platform Data Model
 
 notation crows-foot
 
-auth_users [icon: user, color: blue] {
-  id uuid pk
-}
-
-profiles [icon: user, color: blue] {
+users [icon: user, color: blue] {
   id uuid pk
   email string unique
+  password_hash string
   role string
   created_at timestamptz
   updated_at timestamptz
+}
+
+sessions [icon: key, color: blue] {
+  sid string pk
+  user_id uuid
+  expires timestamptz
 }
 
 categories [icon: folder, color: purple] {
@@ -82,9 +85,9 @@ order_items [icon: list, color: green] {
   created_at timestamptz
 }
 
-auth_users.id - profiles.id
-auth_users.id - carts.user_id
-auth_users.id < orders.user_id
+users.id < carts.user_id
+users.id < orders.user_id
+users.id < sessions.user_id
 categories.id < products.category_id
 carts.id < cart_items.cart_id
 products.id < cart_items.product_id

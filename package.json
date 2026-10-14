@@ -3,21 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "workspaces": [
-    "frontend"
+    "frontend",
+    "backend"
   ],
   "scripts": {
     "dev": "npm run dev --workspace frontend",
     "dev:frontend": "npm run dev --workspace frontend",
+    "dev:backend": "npm run dev --workspace backend",
     "build": "npm run build --workspace frontend",
     "typecheck": "npm run typecheck --workspace frontend",
-    "pages:preview": "npm run build && npx wrangler pages dev frontend/dist",
-    "deploy:pages": "npm run build && npx wrangler pages deploy frontend/dist --project-name min-egna-e-handel",
-    "seed-db": "node scripts/import-dummyjson-products.mjs"
+    "seed-db": "node scripts/import-dummyjson-products.mjs",
+    "migrate:supabase-users": "node scripts/import-supabase-users.mjs",
+    "db:migrate": "npm run migrate --workspace backend"
   },
   "engines": {
     "node": ">=20"
-  },
-  "devDependencies": {
-    "wrangler": "^4.123.0"
   }
 }

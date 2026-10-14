@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { CategoryFilter } from "../../components/CategoryFilter";
 import { ProductCard } from "../../components/ProductCard";
-import { isSupabaseConfigured } from "../../lib/supabase";
 import { getActiveProducts, getCategories, type Category, type Product } from "../../services/productService";
 
 type LoadState = "loading" | "ready" | "error";
@@ -28,11 +27,6 @@ export function ProductListPage() {
     let active = true;
 
     async function loadProducts() {
-      if (!isSupabaseConfigured) {
-        setLoadState("error");
-        return;
-      }
-
       try {
         const [categoryRows, productRows] = await Promise.all([getCategories(), getActiveProducts()]);
 
@@ -118,7 +112,7 @@ export function ProductListPage() {
     return (
       <section className="placeholder">
         <h1>Produkter</h1>
-        <p>Produkterna kunde inte hämtas från Supabase.</p>
+        <p>Produkterna kunde inte hämtas. Försök igen senare.</p>
       </section>
     );
   }

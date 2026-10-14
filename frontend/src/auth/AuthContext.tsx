@@ -1,18 +1,15 @@
-import type { Session, User } from "@supabase/supabase-js";
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { isSupabaseConfigured, supabase } from "../lib/supabase";
+import { apiRequest } from "../lib/api";
 
 export type UserRole = "customer" | "admin";
+export type ShopUser = { id: string; email: string; role: UserRole };
 
 type AuthStatus = "loading" | "ready";
-
 type AuthContextValue = {
   status: AuthStatus;
-  session: Session | null;
-  user: User | null;
+  user: ShopUser | null;
   role: UserRole | null;
   isAdmin: boolean;
-  isConfigured: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   registerCustomer: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -20,114 +17,57 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-type ProfileRow = {
-  role: UserRole;
-};
-
-async function loadRole(userId: string) {
-  const { data, error } = await supabase.from("profiles").select("role").eq("id", userId).single<ProfileRow>();
-
-  if (error || !data) {
-    return null;
-  }
-
-  return data.role;
-}
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [status, setStatus] = useState<AuthStatus>("loading");
-  const [session, setSession] = useState<Session | null>(null);
-  const [role, setRole] = useState<UserRole | null>(null);
+  const [user, setUser] = useState<ShopUser | null>(null);
 
   useEffect(() => {
     let active = true;
-
-    async function loadSession() {
-      if (!isSupabaseConfigured) {
-        setStatus("ready");
-        return;
-      }
-
-      const { data } = await supabase.auth.getSession();
-
-      if (!active) {
-        return;
-      }
-
-      setSession(data.session);
-      setRole(data.session?.user ? await loadRole(data.session.user.id) : null);
-      setStatus("ready");
-    }
-
-    void loadSession();
-
-    const { data: listener } = supabase.auth.onAuthStateChange((_event, nextSession) => {
-      setSession(nextSession);
-      setStatus(nextSession?.user ? "loading" : "ready");
-
-      if (!nextSession?.user) {
-        setRole(null);
-        return;
-      }
-
-      void loadRole(nextSession.user.id).then((nextRole) => {
-        setRole(nextRole);
-        setStatus("ready");
+    void apiRequest<{ user: ShopUser | null }>("/auth/me")
+      .then(({ user: currentUser }) => {
+        if (active) setUser(currentUser);
+      })
+      .catch(() => {
+        if (active) setUser(null);
+      })
+      .finally(() => {
+        if (active) setStatus("ready");
       });
-    });
-
     return () => {
       active = false;
-      listener.subscription.unsubscribe();
     };
   }, []);
 
-  const value = useMemo<AuthContextValue>(
-    () => ({
-      status,
-      session,
-      user: session?.user ?? null,
-      role,
-      isAdmin: role === "admin",
-      isConfigured: isSupabaseConfigured,
-      async signIn(email, password) {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-
-        if (error) {
-          throw error;
-        }
-      },
-      async registerCustomer(email, password) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              role: "customer",
-            },
-          },
-        });
-
-        if (error) {
-          throw error;
-        }
-      },
-      async signOut() {
-        await supabase.auth.signOut();
-      },
-    }),
-    [role, session, status],
-  );
+  const value = useMemo<AuthContextValue>(() => ({
+    status,
+    user,
+    role: user?.role ?? null,
+    isAdmin: user?.role === "admin",
+    async signIn(email, password) {
+      const result = await apiRequest<{ user: ShopUser }>("/auth/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
+      setUser(result.user);
+    },
+    async registerCustomer(email, password) {
+      const result = await apiRequest<{ user: ShopUser }>("/auth/register", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
+      setUser(result.user);
+    },
+    async signOut() {
+      await apiRequest<void>("/auth/logout", { method: "POST" });
+      setUser(null);
+    },
+  }), [status, user]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
   const context = useContext(AuthContext);
-
-  if (!context) {
-    throw new Error("useAuth must be used inside AuthProvider.");
-  }
-
+  if (!context) throw new Error("useAuth must be used inside AuthProvider.");
   return context;
 }

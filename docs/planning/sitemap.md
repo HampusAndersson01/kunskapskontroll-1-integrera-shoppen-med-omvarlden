@@ -104,7 +104,7 @@ Login-sida för kunder och administratörer.
 
 Funktioner:
 
-* Logga in med e-post och lösenord via Supabase Auth
+* Logga in med e-post och lösenord via shopens API
 * Skicka kunder tillbaka till butiken
 * Skicka administratörer vidare till adminpanelen
 * Hindra obehöriga från att redigera produkter eller hantera ordrar
@@ -115,7 +115,7 @@ Registreringssida för kunder.
 
 Funktioner:
 
-* Skapa kundkonto med e-post och lösenord via Supabase Auth
+* Skapa kundkonto med e-post och lösenord via shopens API
 * Skapa tillhörande profil med rollen `customer`
 * Aldrig låta användaren välja rollen `admin`
 * Vara frivillig eftersom köp även kan göras som gäst

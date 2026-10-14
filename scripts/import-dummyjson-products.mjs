@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import pg from "pg";
 
 const DUMMYJSON_PRODUCTS_URL = "https://dummyjson.com/products?limit=100";
 const ROOT_DIR = process.cwd();
@@ -11,10 +12,9 @@ const options = {
   dryRun: process.argv.includes("--dry-run"),
 };
 
-const supabaseUrl = readRequiredEnv("SUPABASE_URL", options.dryRun);
-const serviceRoleKey = readRequiredEnv("SUPABASE_SERVICE_ROLE_KEY", options.dryRun);
+const pool = options.dryRun ? null : createPool();
 
-const productsResponse = await fetch(DUMMYJSON_PRODUCTS_URL);
+const productsResponse = await fetch(DUMMYJSON_PRODUCTS_URL, { signal: AbortSignal.timeout(10000) });
 
 if (!productsResponse.ok) {
   throw new Error(`DummyJSON request failed with ${productsResponse.status}.`);
@@ -29,30 +29,26 @@ console.log(`Mapped ${categories.length} categories.`);
 
 if (options.dryRun) {
   const sampleProduct = mapProduct(products[0], "dry-run-category-id");
-  console.log("Dry run complete. No data was written to Supabase.");
+  console.log("Dry run complete. No data was written to PostgreSQL.");
   console.log("Sample category:", categories[0]);
   console.log("Sample product:", sampleProduct);
   process.exit(0);
 }
 
-const importedCategories = await upsertRows("categories", categories, "slug");
-const categoryIdsBySlug = new Map(importedCategories.map((category) => [category.slug, category.id]));
-
-const mappedProducts = products.map((product) => {
-  const categorySlug = slugify(product.category);
-  const categoryId = categoryIdsBySlug.get(categorySlug);
-
-  if (!categoryId) {
-    throw new Error(`Missing category id for ${categorySlug}.`);
-  }
-
-  return mapProduct(product, categoryId);
-});
-
-const importedProducts = await upsertRows("products", mappedProducts, "external_id");
-
-console.log(`Imported ${importedCategories.length} categories.`);
-console.log(`Imported ${importedProducts.length} products.`);
+try {
+  const importedCategories = await upsertCategories(categories);
+  const categoryIdsBySlug = new Map(importedCategories.map((category) => [category.slug, category.id]));
+  const mappedProducts = products.map((product) => {
+    const categoryId = categoryIdsBySlug.get(slugify(product.category));
+    if (!categoryId) throw new Error(`Missing category id for ${product.category}.`);
+    return mapProduct(product, categoryId);
+  });
+  await upsertProducts(mappedProducts);
+  console.log(`Imported ${importedCategories.length} categories.`);
+  console.log(`Imported ${mappedProducts.length} products.`);
+} finally {
+  await pool.end();
+}
 
 function loadEnvFile(filePath) {
   if (!fs.existsSync(filePath)) {
@@ -147,27 +143,65 @@ function mapProduct(product, categoryId) {
   };
 }
 
-async function upsertRows(table, rows, conflictColumn) {
-  const endpoint = new URL(`/rest/v1/${table}`, supabaseUrl);
-  endpoint.searchParams.set("on_conflict", conflictColumn);
-
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: {
-      apikey: serviceRoleKey,
-      Authorization: `Bearer ${serviceRoleKey}`,
-      "Content-Type": "application/json",
-      Prefer: "resolution=merge-duplicates,return=representation",
-    },
-    body: JSON.stringify(rows),
+function createPool() {
+  const { Pool } = pg;
+  if (process.env.DATABASE_URL) return new Pool({ connectionString: process.env.DATABASE_URL });
+  return new Pool({
+    host: process.env.PGHOST ?? "localhost",
+    port: Number(process.env.PGPORT ?? process.env.DB_PORT ?? 5432),
+    database: process.env.PGDATABASE ?? readRequiredEnv("POSTGRES_DB", false),
+    user: process.env.PGUSER ?? readRequiredEnv("POSTGRES_USER", false),
+    password: process.env.PGPASSWORD ?? readRequiredEnv("POSTGRES_PASSWORD", false),
   });
+}
 
-  if (!response.ok) {
-    const errorBody = await response.text();
-    throw new Error(`Supabase ${table} upsert failed with ${response.status}: ${errorBody}`);
+async function upsertCategories(rows) {
+  const client = await pool.connect();
+  try {
+    await client.query("begin");
+    const saved = [];
+    for (const row of rows) {
+      const result = await client.query(
+        `insert into categories (name,slug) values ($1,$2)
+         on conflict (slug) do update set name=excluded.name,updated_at=now()
+         returning id,name,slug`,
+        [row.name, row.slug],
+      );
+      saved.push(result.rows[0]);
+    }
+    await client.query("commit");
+    return saved;
+  } catch (error) {
+    await client.query("rollback");
+    throw error;
+  } finally {
+    client.release();
   }
+}
 
-  return response.json();
+async function upsertProducts(rows) {
+  const client = await pool.connect();
+  try {
+    await client.query("begin");
+    for (const row of rows) {
+      await client.query(
+        `insert into products (external_id,category_id,name,description,price,discount_percentage,rating,
+         stock,brand,sku,image_url,is_active) values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+         on conflict (external_id) do update set category_id=excluded.category_id,name=excluded.name,
+         description=excluded.description,price=excluded.price,discount_percentage=excluded.discount_percentage,
+         rating=excluded.rating,stock=excluded.stock,brand=excluded.brand,sku=excluded.sku,
+         image_url=excluded.image_url,is_active=excluded.is_active,updated_at=now()`,
+        [row.external_id,row.category_id,row.name,row.description,row.price,row.discount_percentage,row.rating,
+          row.stock,row.brand,row.sku,row.image_url,row.is_active],
+      );
+    }
+    await client.query("commit");
+  } catch (error) {
+    await client.query("rollback");
+    throw error;
+  } finally {
+    client.release();
+  }
 }
 
 function slugify(value) {

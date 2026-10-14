@@ -1,4 +1,8 @@
-# Tidsplan
+# Ursprunglig tidsplan
+
+Den här tidsplanen dokumenterar projektets ursprungliga plan. Den planerade
+Supabase-arkitekturen har sedan ersatts av React, Express och PostgreSQL i
+Docker Compose. Aktuell drift och utveckling beskrivs i README.md.
 
 Denna tidsplan beskriver den planerade arbetsordningen för e-handelsprojektet. Planen är att först få databas, backendlogik och Supabase-koppling att fungera stabilt. Frontenden byggs därför först enkelt för testning och förbättras mer när de viktigaste funktionerna fungerar.
 
@@ -52,7 +56,7 @@ Planerat arbete:
 
 Planerat resultat:
 
-- checkoutfunktion i `supabase/migrations/20260807164500_create_checkout_function.sql`
+- checkoutfunktion i Supabase SQL (ursprunglig plan)
 - orderlogik i `frontend/src/services/orderService.ts`
 - checkout som skapar riktiga orderrader i Supabase
 
@@ -94,7 +98,7 @@ Planerat resultat:
 - adminproduktsidor i `frontend/src/pages/admin/`
 - adminlogik för produkter i `frontend/src/services/productService.ts`
 - orderstatus som kan ändras mellan `Beställd`, `Behandlas`, `Levererad` och `Återbetald`
-- adminpolicies i `supabase/migrations/20260808102000_add_admin_product_policies.sql`
+- adminpolicies i Supabase SQL (ursprunglig plan)
 
 ## Fas 6: Databaslagrad varukorg för VG
 
@@ -112,7 +116,7 @@ Planerat resultat:
 
 - varukorgsservice i `frontend/src/services/cartService.ts`
 - synkning i `frontend/src/cart/CartContext.tsx`
-- cart-policies i `supabase/migrations/20260808110500_add_cart_policies.sql`
+- cart-policies i Supabase SQL (ursprunglig plan)
 
 ## Fas 7: Frontend, design och polering
 
@@ -151,4 +155,4 @@ Planerat resultat:
 - deployment-länk i `README.md`
 - admininloggning för granskning i `README.md`
 - inlämningschecklista i `docs/hand-in-checklist.md`
-- Cloudflare-konfiguration i `wrangler.jsonc`
+- Cloudflare Pages-konfiguration (ursprunglig plan)

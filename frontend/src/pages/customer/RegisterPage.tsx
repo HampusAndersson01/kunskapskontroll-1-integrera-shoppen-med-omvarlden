@@ -3,7 +3,7 @@ import { useAuth } from "../../auth/AuthContext";
 import { Link } from "../../components/Link";
 
 export function RegisterPage() {
-  const { isConfigured, registerCustomer } = useAuth();
+  const { registerCustomer } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
@@ -16,7 +16,7 @@ export function RegisterPage() {
 
     try {
       await registerCustomer(email, password);
-      setMessage("Kontot är skapat. Kontrollera e-posten om Supabase kräver bekräftelse.");
+      setMessage("Kontot är skapat.");
     } catch {
       setMessage("Registreringen misslyckades.");
     } finally {
@@ -28,8 +28,6 @@ export function RegisterPage() {
     <section className="placeholder">
       <h1>Registrera</h1>
       <p>Skapa ett kundkonto. Rollen sätts till customer.</p>
-
-      {!isConfigured && <p className="form-message">Supabase saknar inställningar i frontend/.env.local.</p>}
 
       <form className="form-block" onSubmit={handleSubmit}>
         <label>
@@ -55,7 +53,7 @@ export function RegisterPage() {
           />
         </label>
 
-        <button type="submit" disabled={isSubmitting || !isConfigured}>
+        <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Skapar konto..." : "Skapa konto"}
         </button>
       </form>

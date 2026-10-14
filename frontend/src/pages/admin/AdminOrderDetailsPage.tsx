@@ -92,7 +92,7 @@ export function AdminOrderDetailsPage({ path }: PageProps) {
     return (
       <section className="placeholder">
         <h1>Orderdetaljer</h1>
-        <p>Ordern kunde inte hämtas från Supabase.</p>
+        <p>Ordern kunde inte hämtas. Kontrollera att du är inloggad som administratör.</p>
         <p>
           <Link href="/admin/orders">Till orderlistan</Link>
         </p>

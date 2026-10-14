@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import type { ReactNode } from "react";
 import { useAuth } from "../auth/AuthContext";
-import { getCartItems, getOrCreateCart, replaceCartItems } from "../services/cartService";
+import { getCartItems, replaceCartItems } from "../services/cartService";
 import type { Product } from "../services/productService";
 
 const CART_STORAGE_KEY = "min-egna-ehandel-cart";
@@ -32,7 +32,6 @@ const CartContext = createContext<CartContextValue | null>(null);
 export function CartProvider({ children }: { children: ReactNode }) {
   const { status, user } = useAuth();
   const [items, setItems] = useState<CartItem[]>(() => readStoredCart());
-  const [cartId, setCartId] = useState<string | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
   const hasLoadedDatabaseCart = useRef(false);
 
@@ -57,7 +56,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       }
 
       if (!user) {
-        setCartId(null);
         hasLoadedDatabaseCart.current = false;
         setItems(readStoredCart());
         return;
@@ -66,8 +64,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setIsSyncing(true);
 
       try {
-        const nextCartId = await getOrCreateCart(user.id);
-        const databaseItems = await getCartItems(nextCartId);
+        const databaseItems = await getCartItems();
         const localItems = readStoredCart();
         const mergedItems = mergeCartItems(databaseItems, localItems);
 
@@ -75,12 +72,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
           return;
         }
 
-        setCartId(nextCartId);
         setItems(mergedItems);
         hasLoadedDatabaseCart.current = true;
 
         if (localItems.length > 0) {
-          await replaceCartItems(nextCartId, mergedItems);
+          await replaceCartItems(user.id, mergedItems);
           window.localStorage.removeItem(CART_STORAGE_KEY);
         }
       } finally {
@@ -98,18 +94,18 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [status, user]);
 
   useEffect(() => {
-    if (!user || !cartId || !hasLoadedDatabaseCart.current) {
+    if (!user || !hasLoadedDatabaseCart.current) {
       return;
     }
 
     let active = true;
-    const activeCartId = cartId;
+    const activeUserId = user.id;
 
     async function saveDatabaseCart() {
       setIsSyncing(true);
 
       try {
-        await replaceCartItems(activeCartId, items);
+        await replaceCartItems(activeUserId, items);
       } finally {
         if (active) {
           setIsSyncing(false);
@@ -122,7 +118,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return () => {
       active = false;
     };
-  }, [cartId, items, user]);
+  }, [items, user]);
 
   const value = useMemo<CartContextValue>(() => {
     const itemCount = items.reduce((sum, item) => sum + item.quantity, 0);

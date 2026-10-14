@@ -7,16 +7,7 @@ function getLoginPath() {
 }
 
 export function RequireAdmin({ children }: { children: ReactNode }) {
-  const { status, user, isAdmin, isConfigured } = useAuth();
-
-  if (!isConfigured) {
-    return (
-      <section className="placeholder">
-        <h1>Admin kräver Supabase</h1>
-        <p>Lägg till Supabase-inställningar i frontend/.env.local för att logga in som admin.</p>
-      </section>
-    );
-  }
+  const { status, user, isAdmin } = useAuth();
 
   if (status === "loading") {
     return (

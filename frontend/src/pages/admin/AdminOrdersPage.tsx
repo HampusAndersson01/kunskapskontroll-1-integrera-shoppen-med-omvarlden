@@ -53,7 +53,7 @@ export function AdminOrdersPage() {
     return (
       <section className="placeholder">
         <h1>Hantera ordrar</h1>
-        <p>Ordrarna kunde inte hämtas från Supabase.</p>
+        <p>Ordrarna kunde inte hämtas. Kontrollera att du är inloggad som administratör.</p>
       </section>
     );
   }
