@@ -1,10 +1,13 @@
 import http from "node:http";
+import https from "node:https";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), "dist");
 const port = Number(process.env.PORT ?? 8080);
+const backendUrl = new URL(process.env.BACKEND_URL ?? "http://backend:3000");
+const backendTransport = backendUrl.protocol === "https:" ? https : http;
 const contentTypes = {
   ".css": "text/css; charset=utf-8",
   ".html": "text/html; charset=utf-8",
@@ -26,10 +29,31 @@ http.createServer(async (request, response) => {
     response.writeHead(200, { "content-type": "text/plain; charset=utf-8" }).end("ok");
     return;
   }
-  if (pathname === "/config.js") {
-    const config = { apiBaseUrl: process.env.PUBLIC_API_URL ?? "http://localhost:3000" };
-    response.writeHead(200, { "content-type": "text/javascript; charset=utf-8", "cache-control": "no-store" })
-      .end(`window.__SHOP_CONFIG__=${JSON.stringify(config)};`);
+  if (pathname === "/api" || pathname.startsWith("/api/")) {
+    const proxyRequest = backendTransport.request(
+      {
+        hostname: backendUrl.hostname,
+        port: backendUrl.port || (backendUrl.protocol === "https:" ? 443 : 80),
+        method: request.method,
+        path: request.url,
+        headers: { ...request.headers, host: backendUrl.host },
+      },
+      (backendResponse) => {
+        response.writeHead(backendResponse.statusCode ?? 502, backendResponse.headers);
+        backendResponse.pipe(response);
+      },
+    );
+    proxyRequest.setTimeout(15000, () => proxyRequest.destroy(new Error("API request timed out.")));
+    proxyRequest.on("error", (error) => {
+      console.error("API proxy request failed:", error.message);
+      if (response.headersSent) {
+        response.destroy(error);
+      } else {
+        response.writeHead(502, { "content-type": "application/json; charset=utf-8" })
+          .end(JSON.stringify({ error: "The API is temporarily unavailable." }));
+      }
+    });
+    request.pipe(proxyRequest);
     return;
   }
 

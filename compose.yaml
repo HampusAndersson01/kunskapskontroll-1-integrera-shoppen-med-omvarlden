@@ -54,7 +54,7 @@ services:
     restart: unless-stopped
     environment:
       PORT: 8080
-      PUBLIC_API_URL: ${PUBLIC_API_URL:-http://localhost:3000}
+      BACKEND_URL: http://backend:3000
     depends_on:
       backend:
         condition: service_healthy

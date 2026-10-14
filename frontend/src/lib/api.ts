@@ -1,17 +1,5 @@
-type ApiRuntimeConfig = {
-  apiBaseUrl?: string;
-};
-
-declare global {
-  interface Window {
-    __SHOP_CONFIG__?: ApiRuntimeConfig;
-  }
-}
-
-const apiBaseUrl = (window.__SHOP_CONFIG__?.apiBaseUrl ?? "").replace(/\/$/, "");
-
 export async function apiRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const response = await fetch(`${apiBaseUrl}/api${path}`, {
+  const response = await fetch(`/api${path}`, {
     ...init,
     credentials: "include",
     headers: {
